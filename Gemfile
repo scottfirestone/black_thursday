@@ -1,7 +1,6 @@
-source "https://www.rubygems.org"
+source 'https://rubygems.org'
 
-gem "mrspec"
-gem "pry"
-gem "pry-nav"
-gem "simplecov"
-gem "codeclimate-test-reporter", group: :test, require: nil
+gem 'cane'
+gem 'reek'
+gem 'rake'
+gem 'minitest'
