@@ -4,7 +4,7 @@ require 'merchant_repository'
  class MerchantRepositoryTest < Minitest::Test
 
   def test_merchant_repository_instance
-    mr = MerchantRepository.new
+    mr = MerchantRepository.new(data)
     assert mr
   end
 

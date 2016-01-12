@@ -3,38 +3,38 @@ require_relative 'merchant'
 require 'pry'
 
 class MerchantRepository
-  attr_reader :contents
+  attr_reader :merchants
 
-  def initialize
-    @contents = []
+  def initialize(merchants_data)
+    @merchants = load_data(merchants_data)
   end
 
   def load_data(merchants)
     csv = CSV.open(merchants, headers: true, header_converters: :symbol)
-    @contents = csv.map do |row|
+    @merchants = csv.map do |row|
       Merchant.new(row[:name], row[:id])
     end
   end
 
   def all
-    contents
+    merchants
   end
 
   def find_by_id(id)
-    contents.detect do |object|
+    merchants.detect do |object|
       object.id == id
     end
   end
 
   def find_by_name(name)
-    contents.detect do |object|
+    merchants.detect do |object|
       object.name.downcase == name.downcase
     end
   end
 
   def find_all_by_name(search_name)
-      contents.select do |object|
-        object.name.downcase.include?(search_name.downcase)
+    merchants.select do |object|
+      object.name.downcase.include?(search_name.downcase)
     end
   end
 
