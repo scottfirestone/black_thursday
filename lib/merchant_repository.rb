@@ -21,20 +21,20 @@ class MerchantRepository
   end
 
   def find_by_id(id)
-    merchants.detect do |object|
-      object.id == id
+    merchants.detect do |merchant|
+      merchant.id == id
     end
   end
 
   def find_by_name(name)
-    merchants.detect do |object|
-      object.name.downcase == name.downcase
+    merchants.detect do |merchant|
+      merchant.name.downcase == name.downcase
     end
   end
 
   def find_all_by_name(search_name)
-    merchants.select do |object|
-      object.name.downcase.include?(search_name.downcase)
+    merchants.select do |merchant|
+      merchant.name.downcase.include?(search_name.downcase)
     end
   end
 
