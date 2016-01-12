@@ -28,8 +28,17 @@ class MerchantRepository
     end
   end
 
-  def
+  def find_by_name(name)
+    contents.detect do |object|
+      object.name.downcase == name.downcase
+    end
+  end
 
+  def find_all_by_name(search_name)
+      contents.select do |object|
+        object.name.downcase.include?(search_name.downcase)
+    end
+  end
   # def load_data(merchants)
   #   contents = CSV.open(merchants, headers: true, header_converters: :symbol)
   #   content.each do |row|
@@ -45,9 +54,6 @@ class MerchantRepository
   #
   # end
 
-  def all
-
-  end
 end
 
 merchant = MerchantRepository.new

@@ -2,7 +2,7 @@ require 'test_helper'
 require 'merchant_repository'
 require 'pry'
 
-class MerchantRepositoryTest < Minitest::Test
+ class MerchantRepositoryTest < Minitest::Test
 
   def test_merchant_instance
     mr = MerchantRepository.new
@@ -30,7 +30,7 @@ class MerchantRepositoryTest < Minitest::Test
   end
 
   ##refactor!!!!
-  def test_the_all_method_returns_all_merchant_instances
+  def test_all_method_returns_all_merchant_instances
     mr = MerchantRepository.new
     csv = CSV.open("test_merchants.csv", headers:true, header_converters: :symbol)
     count = 0
@@ -44,7 +44,7 @@ class MerchantRepositoryTest < Minitest::Test
     assert_equal 199, all_merchants.length
   end
 
-  def test_the_find_by_id_method_returns_a_merchant_object_based_on_its_id
+  def test_find_by_id_method_returns_merchant_instance
     mr = MerchantRepository.new
     mr.load_data("test_merchants.csv")
     found_merchant = mr.find_by_id("12334984")
@@ -56,5 +56,49 @@ class MerchantRepositoryTest < Minitest::Test
     refute_equal "12345678", found_merchant.id
   end
 
+  ##ask trey about refute vs assert_equal nil
+  def test_find_by_id_method_returns_nil_if_no_match
+    mr = MerchantRepository.new
+    mr.load_data("test_merchants.csv")
+    assert_equal nil, mr.find_by_id("001")
+  end
+
+  def test_find_by_name_method_returns_merchant_instance
+    mr = MerchantRepository.new
+    mr.load_data("test_merchants.csv")
+    found_merchant = mr.find_by_name("ShopDixieChicken")
+
+    assert_equal Merchant, found_merchant.class
+    assert_equal "ShopDixieChicken", found_merchant.name
+
+    found_merchant_lc = mr.find_by_name("shopdixiechicken")
+    assert_equal "ShopDixieChicken", found_merchant_lc.name
+
+    refute_equal "Centower", found_merchant.name
+    assert_equal "12334984", found_merchant.id
+    refute_equal "12345678", found_merchant.id
+  end
+
+  def test_find_by_name_method_returns_nil_if_no_match
+    mr = MerchantRepository.new
+    mr.load_data("test_merchants.csv")
+    assert_equal nil, mr.find_by_name("Centower")
+  end
+
+  def test_find_by_name_method_is_not_match
+    mr = MerchantRepository.new
+    mr.load_data("test_merchants.csv")
+    assert_equal nil, mr.find_by_name("Centower")
+  end
+
+  def test_find_all_by_name_method_returns_all_matching_instances
+    mr = MerchantRepository.new
+    mr.load_data("test_merchants.csv")
+    found_merchant_array = mr.find_all_by_name("pd").map { |object| object.name }
+
+    assert found_merchant_array.include?("TheWoodchopDesign")
+    assert found_merchant_array.include?("ShopDixieChicken")
+    refute found_merchant_array.include?("Centower")
+  end
 
 end
