@@ -12,9 +12,7 @@ class MerchantRepository
   def load_data(merchants)
     csv = CSV.open(merchants, headers: true, header_converters: :symbol)
     @contents = csv.map do |row|
-      name = row[:name]
-      id = row[:id]
-      merchant = Merchant.new(name, id)
+      Merchant.new(row[:name], row[:id])
     end
   end
 
@@ -39,21 +37,5 @@ class MerchantRepository
         object.name.downcase.include?(search_name.downcase)
     end
   end
-  # def load_data(merchants)
-  #   contents = CSV.open(merchants, headers: true, header_converters: :symbol)
-  #   content.each do |row|
-  #     @merchants << row
-  #   end
-  # end
-  #
-  # def merchants
-  #   @merchants
-  # end
-  #
-  # def find_by_name
-  #
-  # end
 
 end
-
-merchant = MerchantRepository.new
