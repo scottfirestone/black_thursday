@@ -27,7 +27,6 @@ class MerchantRepositoryTest < Minitest::Test
     actual = merchant_array.sample.class
     expected = Merchant
     assert_equal expected, actual
-
   end
 
   ##refactor!!!!
@@ -45,6 +44,17 @@ class MerchantRepositoryTest < Minitest::Test
     assert_equal 199, all_merchants.length
   end
 
+  def test_the_find_by_id_method_returns_a_merchant_object_based_on_its_id
+    mr = MerchantRepository.new
+    mr.load_data("test_merchants.csv")
+    found_merchant = mr.find_by_id("12334984")
+
+    assert_equal Merchant, found_merchant.class
+    assert_equal "ShopDixieChicken", found_merchant.name
+    refute_equal "Centower", found_merchant.name
+    assert_equal "12334984", found_merchant.id
+    refute_equal "12345678", found_merchant.id
+  end
 
 
 end

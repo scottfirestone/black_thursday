@@ -23,7 +23,9 @@ class MerchantRepository
   end
 
   def find_by_id(id)
-
+    contents.detect do |object|
+      object.id == id
+    end
   end
 
   def
