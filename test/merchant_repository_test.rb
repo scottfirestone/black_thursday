@@ -1,10 +1,9 @@
 require 'test_helper'
 require 'merchant_repository'
-require 'pry'
 
  class MerchantRepositoryTest < Minitest::Test
 
-  def test_merchant_instance
+  def test_merchant_repository_instance
     mr = MerchantRepository.new
     assert mr
   end
@@ -60,7 +59,6 @@ require 'pry'
   def test_find_by_id_method_returns_nil_if_no_match
     mr = MerchantRepository.new
     mr.load_data("test_merchants.csv")
-    binding.pry
     assert_equal nil, mr.find_by_id("001")
   end
 
@@ -81,12 +79,6 @@ require 'pry'
   end
 
   def test_find_by_name_method_returns_nil_if_no_match
-    mr = MerchantRepository.new
-    mr.load_data("test_merchants.csv")
-    assert_equal nil, mr.find_by_name("Centower")
-  end
-
-  def test_find_by_name_method_is_not_match
     mr = MerchantRepository.new
     mr.load_data("test_merchants.csv")
     assert_equal nil, mr.find_by_name("Centower")

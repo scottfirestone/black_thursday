@@ -1,5 +1,5 @@
 class Merchant
-  attr_accessor :id, :name
+  attr_reader :id, :name
 
   def initialize(name = nil, id = nil)
     @name = name
