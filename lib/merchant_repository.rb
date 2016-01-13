@@ -36,4 +36,8 @@ class MerchantRepository
       merchant.name.downcase.include?(search_name.downcase)
     end
   end
+
+  def inspect
+    "#<#{self.class} #{@merchants.size} rows>"
+  end
 end

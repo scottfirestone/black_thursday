@@ -7,7 +7,6 @@ class SalesEngine
 
   def from_csv(data)
     @data = data
-
   end
 
   def merchants

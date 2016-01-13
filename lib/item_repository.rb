@@ -60,8 +60,8 @@ class ItemRepository
       item.merchant_id == merchant_id
     end
   end
-#   find_all_by_price - returns either [] or instances of Item where the supplied price exactly matches
-# find_all_by_price_in_range - returns either [] or instances of Item where the supplied price is in the supplied range (a single Ruby range instance is passed in)
-# find_all_by_merchant_id - returns either [] or instances of Item where the supplied merchant ID matches that supplied
-  #also, use the word 'zipper' for description test
+
+  def inspect
+    "#<#{self.class} #{@items.size} rows>"
+  end
 end
