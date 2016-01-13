@@ -22,10 +22,10 @@ class SalesEngine
 
 end
 
-if __FILE__ $0
+if __FILE__ == $0
   puts se = SalesEngine.new.from_csv({
     :items     => "./data/items.csv",
-    :merchants => "./data/merchants.csv",
+    :merchants => "./data/merchants.csv"
   })
 
   mr = se.merchants

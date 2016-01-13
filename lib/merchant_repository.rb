@@ -1,6 +1,5 @@
 require 'csv'
 require_relative 'merchant'
-require 'pry'
 
 class MerchantRepository
   attr_reader :merchants
@@ -12,7 +11,7 @@ class MerchantRepository
   def load_data(merchants)
     csv = CSV.open(merchants, headers: true, header_converters: :symbol)
     @merchants = csv.map do |row|
-      Merchant.new(row[:name], row[:id])
+      Merchant.new({:name => row[:name], :id => row[:id]})
     end
   end
 
@@ -37,5 +36,4 @@ class MerchantRepository
       merchant.name.downcase.include?(search_name.downcase)
     end
   end
-
 end

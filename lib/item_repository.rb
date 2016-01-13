@@ -11,8 +11,10 @@ class ItemRepository
   def load_data(items)
     csv = CSV.open(items, headers: true, header_converters: :symbol)
     @items = csv.map do |row|
-      Item.new(row[:id], row[:name], row[:description], row[:unit_price],
-        row[:created_at], row[:updated_at])
+      Item.new({:id => row[:id], :name => row[:name],
+        :description => row[:description], :unit_price => row[:unit_price],
+        :merchant_id => row[:merchant_id], :created_at => row[:created_at],
+        :updated_at => row[:updated_at]})
     end
   end
 
@@ -21,22 +23,41 @@ class ItemRepository
   end
 
   def find_by_id(id)
-    items.detect do |object|
-      object.id == id
+    items.detect do |item|
+      item.id == id
     end
   end
 
   def find_by_name(name)
-    items.detect do |object|
-      object.name.downcase == name.downcase
+    items.detect do |item|
+      item.name.downcase == name.downcase
     end
   end
 
-    #revisit and figure out cases line "the", "and", "a" etc.
   def find_all_with_description(description)
-    items.select do |object|
-      object.descripion.downcase.include?(description.downcase)
+    items.select do |item|
+      item.description.downcase.include?(description.downcase)
     end
   end
+
+  def find_all_by_price(price)
+    digits = price.sub(".", "").length
+    bd_price = BigDecimal(price, digits)
+    items.select do |item|
+      item.unit_price == bd_price
+    end
+  end
+
+  def find_all_by_price_in_range
+  end
+
+  def find_all_by_merchant_id(merchant_id)
+    items.select do |item|
+      item.merchant_id == merchant_id
+    end
+  end
+#   find_all_by_price - returns either [] or instances of Item where the supplied price exactly matches
+# find_all_by_price_in_range - returns either [] or instances of Item where the supplied price is in the supplied range (a single Ruby range instance is passed in)
+# find_all_by_merchant_id - returns either [] or instances of Item where the supplied merchant ID matches that supplied
   #also, use the word 'zipper' for description test
 end
