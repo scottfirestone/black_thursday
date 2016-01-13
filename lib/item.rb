@@ -1,22 +1,44 @@
 require 'bigdecimal'
 
 class Item
-  attr_reader :id, :name, :description, :unit_price, :merchant_id, :created_at, :updated_at
+  attr_reader :data
 
-  def initialize(item_data)
-    @id           = item_data[:id]
-    @name         = item_data[:name]
-    @description  = item_data[:description]
-    @unit_price   = convert_to_float(item_data[:unit_price])
-    @merchant_id  = item_data[:merchant_id]
-    @created_at   = Time.parse(item_data[:created_at]) unless item_data[:created_at] == nil
-    @updated_at   = Time.parse(item_data[:updated_at]) unless item_data[:updated_at] == nil
+  def initialize(data)
+    @data = data
   end
 
-  def convert_to_float(unit_price)
-    if unit_price
-      number_of_digits = unit_price.sub(".","").size
-      BigDecimal.new(unit_price,number_of_digits)
+  def id
+    data[:id]
+  end
+
+  def name
+    data[:name]
+  end
+
+  def description
+    data[:description]
+  end
+
+  def unit_price
+    price = data[:unit_price]
+    BigDecimal.new(price, price.size)
+  end
+
+  def merchant_id
+    data[:merchant_id]
+  end
+
+  def created_at
+    created = data[:created_at]
+    unless created == nil
+      Time.parse(created)
+    end
+  end
+
+  def updated_at
+    updated = data[:updated_at]
+    unless updated == nil
+      Time.parse(data[:updated_at])
     end
   end
 end

@@ -1,4 +1,4 @@
-require 'item'
+require_relative 'item'
 require 'csv'
 
 class ItemRepository
@@ -11,10 +11,13 @@ class ItemRepository
   def load_data(items)
     csv = CSV.open(items, headers: true, header_converters: :symbol)
     @items = csv.map do |row|
-      Item.new({:id => row[:id], :name => row[:name],
-        :description => row[:description], :unit_price => row[:unit_price],
-        :merchant_id => row[:merchant_id], :created_at => row[:created_at],
-        :updated_at => row[:updated_at]})
+      Item.new({:id          => row[:id],
+                :name        => row[:name],
+                :description => row[:description],
+                :unit_price  => row[:unit_price],
+                :merchant_id => row[:merchant_id],
+                :created_at  => row[:created_at],
+                :updated_at  => row[:updated_at]})
     end
   end
 
@@ -41,14 +44,15 @@ class ItemRepository
   end
 
   def find_all_by_price(price)
-    digits = price.sub(".", "").length
-    bd_price = BigDecimal(price, digits)
     items.select do |item|
-      item.unit_price == bd_price
+      item.unit_price == price.to_f
     end
   end
 
-  def find_all_by_price_in_range
+  def find_all_by_price_in_range(range)
+    items.select do |item|
+      range.include?(item.unit_price)
+    end
   end
 
   def find_all_by_merchant_id(merchant_id)

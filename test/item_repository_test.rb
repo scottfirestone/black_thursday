@@ -106,4 +106,11 @@ require 'item_repository'
      unit_price_match = found_price_array.all? { |price| price == BigDecimal.new("2390", 4)}
      assert unit_price_match
    end
+
+   def test_find_all_by_price_in_range
+     ir = ItemRepository.new(items_data)
+     found_price_array = ir.find_all_by_price_in_range(2389..2391).map { |item| item.unit_price }
+     assert_equal 3, found_price_array.size
+     
+   end
  end
