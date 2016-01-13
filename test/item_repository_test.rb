@@ -111,6 +111,11 @@ require 'item_repository'
      ir = ItemRepository.new(items_data)
      found_price_array = ir.find_all_by_price_in_range(2389..2391).map { |item| item.unit_price }
      assert_equal 3, found_price_array.size
-     
+
+     found_price_array = ir.find_all_by_price_in_range(2389..30000).map { |item| item.unit_price }
+     assert_equal 84, found_price_array.size
+
+     found_price_array = ir.find_all_by_price_in_range(0..9)
+     assert_equal [], found_price_array
    end
  end
