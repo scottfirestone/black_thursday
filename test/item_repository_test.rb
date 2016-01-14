@@ -34,11 +34,11 @@ require 'item_repository'
      count = 0
      csv.each { |line| count +=1 }
 
-     assert_equal 155, count
+     assert_equal 159, count
 
      all_items = ir.all
 
-     assert_equal 155, all_items.length
+     assert_equal 159, all_items.length
    end
 
    def test_find_by_id_method_returns_item_instance
@@ -113,7 +113,7 @@ require 'item_repository'
      assert_equal 3, found_price_array.size
 
      found_price_array = ir.find_all_by_price_in_range(2389..30000).map { |item| item.unit_price }
-     assert_equal 84, found_price_array.size
+     assert_equal 87, found_price_array.size
 
      found_price_array = ir.find_all_by_price_in_range(0..9)
      assert_equal [], found_price_array

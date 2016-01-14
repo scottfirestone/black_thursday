@@ -33,22 +33,19 @@ class SalesAnalyst
 
   def average_item_price_for_merchant(merchant_id)
     merchant = merch_repo.find_by_id(merchant_id)
-    # item_prices_sum = merchant.items.reduce(0) do |sum, item|
-    #   sum += item.unit_price
-    # end.to_f
     item_prices = merchant.items.map do |item|
       item.unit_price
     end
     stats = DescriptiveStatistics::Stats.new(item_prices)
     stats.mean.round(2)
-  # average_item_price = (item_prices_sum / merchant.item_count).round(2)
-  # BigDecimal.new(average_item_price, average_item_price.digits)
   end
 
   def average_price_per_merchant
-    merch_repo.all.map do |merchant|
-      merchant.unit_price
+    average_merchants_price = merch_repo.all.map do |merchant|
+      average_item_price_for_merchant(merchant.id)
     end
+    stats = DescriptiveStatistics::Stats.new(average_merchants_price)
+    stats.mean.round(2)
   end
 
   def golden_items

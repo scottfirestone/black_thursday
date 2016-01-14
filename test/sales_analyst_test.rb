@@ -21,23 +21,23 @@ class SalesAnalystTest < Minitest::Test
     assert_equal 6, merchants_count
     items_count = se.merchants.all.map{|m|m.item_count}.reduce(0, :+)
 
-    assert_equal 20, items_count
-    assert_equal 3.33, sa.average_items_per_merchant
+    assert_equal 24, items_count
+    assert_equal 4.0, sa.average_items_per_merchant
   end
 
   def test_the_average_items_per_merchant_standard_deviation
     se = SalesEngine.from_csv({:items => "test_items.csv", :merchants => "sa_test_merchants.csv"})
     sa = SalesAnalyst.new(se)
     merchants_items = se.merchants.all.map{|m|m.item_count}
-    assert_equal [1, 1, 1, 0, 17, 0], merchants_items
-    assert_equal 6.71, sa.average_items_per_merchant_standard_deviation
+    assert_equal [1, 1, 1, 1, 17, 3], merchants_items
+    assert_equal 6.42, sa.average_items_per_merchant_standard_deviation
   end
 
   def test_the_merchants_with_low_item_count
     se = SalesEngine.from_csv({:items => "test_items.csv", :merchants => "sa_test_merchants.csv"})
     sa = SalesAnalyst.new(se)
     merchants_items = se.merchants.all.map{|m|m.item_count}
-    assert_equal [1, 1, 1, 0, 17, 0], merchants_items
+    assert_equal [1, 1, 1, 1, 17, 3], merchants_items
     assert_equal 0, sa.merchants_with_low_item_count.length
     assert_equal [], sa.merchants_with_low_item_count.map { |m| m.item_count}
   end
@@ -54,6 +54,14 @@ class SalesAnalystTest < Minitest::Test
   end
 
   def test_the_average_price_per_merchant
+    se = SalesEngine.from_csv({:items => "test_items.csv", :merchants => "sa_test_merchants.csv"})
+    sa = SalesAnalyst.new(se)
+
+    # merchant = se.merchants.find_by_id(merchant_id)
+    # expected =
+    # assert expected, #merchant.items.map { |item| item.unit_price }
+
+    assert 5857.68, sa.average_price_per_merchant
   end
 
   def golden_items
