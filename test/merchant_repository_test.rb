@@ -52,13 +52,13 @@ require 'merchant_repository'
   def test_find_by_id_method_returns_merchant_instance
     mr = MerchantRepository.new(merchants_data)
     mr.load_data("test_merchants.csv")
-    found_merchant = mr.find_by_id("12334984")
+    found_merchant = mr.find_by_id(12334984)
 
     assert_equal Merchant, found_merchant.class
     assert_equal "ShopDixieChicken", found_merchant.name
     refute_equal "Centower", found_merchant.name
-    assert_equal "12334984", found_merchant.id
-    refute_equal "12345678", found_merchant.id
+    assert_equal 12334984, found_merchant.id
+    refute_equal 12345678, found_merchant.id
   end
 
   ##ask trey about refute vs assert_equal nil
@@ -80,8 +80,8 @@ require 'merchant_repository'
     assert_equal "ShopDixieChicken", found_merchant_lc.name
 
     refute_equal "Centower", found_merchant.name
-    assert_equal "12334984", found_merchant.id
-    refute_equal "12345678", found_merchant.id
+    assert_equal 12334984, found_merchant.id
+    refute_equal 12345678, found_merchant.id
   end
 
   def test_find_by_name_method_returns_nil_if_no_match

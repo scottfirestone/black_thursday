@@ -5,7 +5,7 @@ class Merchant
 
   def initialize(merchant_data)
     @name = merchant_data[:name]
-    @id   = merchant_data[:id]
+    @id   = merchant_data[:id].to_i
   end
 
   def items

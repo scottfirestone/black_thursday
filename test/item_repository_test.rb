@@ -43,19 +43,19 @@ require 'item_repository'
 
    def test_find_by_id_method_returns_item_instance
      ir = ItemRepository.new(items_data)
-     found_item = ir.find_by_id("263395237")
+     found_item = ir.find_by_id(263395237)
 
      assert_equal Item, found_item.class
      assert_equal "510+ RealPush Icon Set", found_item.name
      refute_equal "Centower", found_item.name
-     assert_equal "263395237", found_item.id
-     refute_equal "000000000", found_item.id
+     assert_equal 263395237, found_item.id
+     refute_equal 000000000, found_item.id
    end
 
    ##ask trey about refute vs assert_equal nil
    def test_find_by_id_method_returns_nil_if_no_match
      ir = ItemRepository.new(items_data)
-     assert_equal nil, ir.find_by_id("001")
+     assert_equal nil, ir.find_by_id(001)
    end
 
    def test_find_by_name_method_returns_item_instance
@@ -69,8 +69,8 @@ require 'item_repository'
      assert_equal "510+ RealPush Icon Set", found_item_lc.name
 
      refute_equal "Centower", found_item.name
-     assert_equal "263395237", found_item.id
-     refute_equal "12345678", found_item.id
+     assert_equal 263395237, found_item.id
+     refute_equal 12345678, found_item.id
    end
 
    def test_find_by_name_method_returns_nil_if_no_match
@@ -89,11 +89,11 @@ require 'item_repository'
 
    def test_find_all_by_merchant_id_method_returns_all_matching_item_instances
      ir = ItemRepository.new(items_data)
-     found_merchant_id_array = ir.find_all_by_merchant_id("12334185").map { |item| item.merchant_id }
+     found_merchant_id_array = ir.find_all_by_merchant_id(12334185).map { |item| item.merchant_id }
 
      assert_equal 3, found_merchant_id_array.size
 
-     merchant_ids_match = found_merchant_id_array.all? { |id| id == "12334185" }
+     merchant_ids_match = found_merchant_id_array.all? { |id| id == 12334185 }
      assert merchant_ids_match
    end
 

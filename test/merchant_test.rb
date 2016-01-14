@@ -15,7 +15,7 @@ class MerchantTest < Minitest::Test
 
   def test_it_has_an_id
     merchant = Merchant.new({:name => "Turing School", :id => "12345678"})
-    assert_equal "12345678", merchant.id
+    assert_equal 12345678, merchant.id
   end
 
   def test_items_method_returns_all_items_matching_merchant_id
@@ -23,7 +23,7 @@ class MerchantTest < Minitest::Test
       :items     => "./test_items.csv",
       :merchants => "./test_merchants.csv",
       })
-    merchant = se.merchants.find_by_id("12334105")
+    merchant = se.merchants.find_by_id(12334105)
     assert merchant.items
   end
 end

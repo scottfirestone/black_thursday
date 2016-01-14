@@ -23,7 +23,7 @@ class ItemTest < Minitest::Test
 
   def test_it_has_an_id
     item = Item.new(item_data)
-    assert_equal "263397163", item.id
+    assert_equal 263397163, item.id
   end
 
   def test_it_has_a_name
@@ -51,21 +51,21 @@ class ItemTest < Minitest::Test
 
   def test_it_has_a_merchant_id
     item = Item.new(item_data)
-    expected = "12334207"
+    expected = 12334207
     assert_equal expected, item.merchant_id
   end
 
   ###check format
   def test_it_has_a_created_at_date
     item = Item.new(item_data)
-    expected = Time.parse("2016-01-11 10:51:02 UTC")
+    expected = Time.new("2016-01-11 10:51:02 UTC")
     assert_equal expected, item.created_at
   end
 
   ###check format
   def test_updated_at
     item = Item.new(item_data)
-    expected = Time.parse("1988-09-01 17:09:25 UTC")
+    expected = Time.new("1988-09-01 17:09:25 UTC")
     assert_equal expected, item.updated_at
   end
 
@@ -74,7 +74,7 @@ class ItemTest < Minitest::Test
       :items     => "./test_items.csv",
       :merchants => "./test_merchants.csv",
       })
-    item = se.items.find_by_id("263395237")
+    item = se.items.find_by_id(263395237)
     assert item.merchant
   end
 end

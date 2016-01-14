@@ -9,7 +9,7 @@ class Item
   end
 
   def id
-    data[:id]
+    data[:id].to_i
   end
 
   def name
@@ -26,20 +26,20 @@ class Item
   end
 
   def merchant_id
-    data[:merchant_id]
+    data[:merchant_id].to_i
   end
 
   def created_at
     created = data[:created_at]
     unless created == nil
-      Time.parse(created)
+      Time.new(created)
     end
   end
 
   def updated_at
     updated = data[:updated_at]
     unless updated == nil
-      Time.parse(data[:updated_at])
+      Time.new(data[:updated_at])
     end
   end
 
