@@ -62,7 +62,19 @@ class ItemTest < Minitest::Test
     assert_equal expected, item.created_at
   end
 
+  def test_created_at_handles_nil
+    item = Item.new(item_data)
+    item.data[:created_at] = nil
+    assert_equal nil, item.created_at
+  end
+
   ###check format
+  def test_updated_at_handles_nil
+    item = Item.new(item_data)
+    item.data[:updated_at] = nil
+    assert_equal nil, item.updated_at
+  end
+
   def test_updated_at
     item = Item.new(item_data)
     expected = Time.new("1988-09-01 17:09:25 UTC")

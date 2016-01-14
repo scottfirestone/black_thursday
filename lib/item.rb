@@ -30,17 +30,11 @@ class Item
   end
 
   def created_at
-    created = data[:created_at]
-    unless created == nil
-      Time.new(created)
-    end
+    Time.new(data[:created_at]) if data[:created_at]
   end
 
   def updated_at
-    updated = data[:updated_at]
-    unless updated == nil
-      Time.new(data[:updated_at])
-    end
+    Time.new(data[:updated_at]) if data[:updated_at]
   end
 
   def merchant
