@@ -5,7 +5,7 @@ class ItemRepository
   attr_reader :items
 
   def initialize(items_data)
-    @items = load_data(items_data)
+    @items ||= load_data(items_data)
   end
 
   def load_data(items)

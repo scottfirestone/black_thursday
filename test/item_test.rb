@@ -1,6 +1,5 @@
 require 'test_helper'
 require 'item'
-require 'pry'
 
 class ItemTest < Minitest::Test
   attr_reader :item_data
@@ -68,5 +67,14 @@ class ItemTest < Minitest::Test
     item = Item.new(item_data)
     expected = Time.parse("1988-09-01 17:09:25 UTC")
     assert_equal expected, item.updated_at
+  end
+
+  def test_merchant_method_returns_merchant_with_matching_id
+    se = SalesEngine.from_csv({
+      :items     => "./test_items.csv",
+      :merchants => "./test_merchants.csv",
+      })
+    item = se.items.find_by_id("263395237")
+    assert item.merchant
   end
 end

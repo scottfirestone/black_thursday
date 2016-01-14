@@ -1,4 +1,5 @@
 require 'bigdecimal'
+require 'sales_engine'
 
 class Item
   attr_reader :data
@@ -40,5 +41,10 @@ class Item
     unless updated == nil
       Time.parse(data[:updated_at])
     end
+  end
+
+  def merchant
+    mr = SalesEngine.merchants
+    mr.find_by_id(merchant_id)
   end
 end

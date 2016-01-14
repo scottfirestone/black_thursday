@@ -5,7 +5,7 @@ class MerchantRepository
   attr_reader :merchants
 
   def initialize(merchants_data)
-    @merchants = load_data(merchants_data)
+    @merchants ||= load_data(merchants_data)
   end
 
   def load_data(merchants)

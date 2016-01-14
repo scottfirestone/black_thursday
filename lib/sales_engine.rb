@@ -5,18 +5,18 @@ class SalesEngine
 
   attr_reader :data, :merchants, :items
 
-  def from_csv(data)
-    @data = data
+  def self.from_csv(data)
+    @merchants = MerchantRepository.new(data[:merchants])
+    @items = ItemRepository.new(data[:items])
+    self
   end
 
-  def merchants
-    merchants_data = data[:merchants]
-    MerchantRepository.new(merchants_data)
+  def self.merchants
+    @merchants
   end
 
-  def items
-    items_data = data[:items]
-    ItemRepository.new(items_data)
+  def self.items
+    @items
   end
 
 end
