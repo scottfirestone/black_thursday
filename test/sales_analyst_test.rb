@@ -56,11 +56,13 @@ class SalesAnalystTest < Minitest::Test
   def test_the_average_price_per_merchant
     se = SalesEngine.from_csv({:items => "test_items.csv", :merchants => "sa_test_merchants.csv"})
     sa = SalesAnalyst.new(se)
+    
+    expected = [2999, 1500, 15000, 2000, 10147.06, 3500]
+    actual = sa.merch_repo.all.map do |merchant|
+      merchant.average_item_price
+    end
 
-    # merchant = se.merchants.find_by_id(merchant_id)
-    # expected =
-    # assert expected, #merchant.items.map { |item| item.unit_price }
-
+    assert_equal expected, actual
     assert 5857.68, sa.average_price_per_merchant
   end
 

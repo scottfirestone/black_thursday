@@ -33,11 +33,7 @@ class SalesAnalyst
 
   def average_item_price_for_merchant(merchant_id)
     merchant = merch_repo.find_by_id(merchant_id)
-    item_prices = merchant.items.map do |item|
-      item.unit_price
-    end
-    stats = DescriptiveStatistics::Stats.new(item_prices)
-    stats.mean.round(2)
+    merchant.average_item_price
   end
 
   def average_price_per_merchant

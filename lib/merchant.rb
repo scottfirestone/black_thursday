@@ -16,4 +16,9 @@ class Merchant
   def item_count
     items.count
   end
+
+  def average_item_price
+    sum_prices = items.map { |item| item.unit_price }.reduce(0, :+)
+    (sum_prices / item_count).round(2)
+  end
 end

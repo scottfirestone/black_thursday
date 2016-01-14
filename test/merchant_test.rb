@@ -26,4 +26,25 @@ class MerchantTest < Minitest::Test
     merchant = se.merchants.find_by_id(12334105)
     assert merchant.items
   end
+
+  def test_item_count
+    se = SalesEngine.from_csv({
+      :items     => "./test_items.csv",
+      :merchants => "./test_merchants.csv",
+      })
+    merchant = se.merchants.find_by_id(12334105)
+    assert_equal 1, merchant.item_count
+
+    big_merchant = se.merchants.find_by_id(12334123)
+    assert_equal 17, big_merchant.item_count
+  end
+
+  def test_it_finds_the_average_item_price
+    se = SalesEngine.from_csv({
+      :items     => "./test_items.csv",
+      :merchants => "./test_merchants.csv",
+      })
+    merchant = se.merchants.find_by_id(12334123)
+    assert_equal 10147.06, merchant.average_item_price
+  end
 end
