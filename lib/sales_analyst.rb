@@ -14,12 +14,12 @@ class SalesAnalyst
     items_count = merch_repo.all.map{|m|m.item_count}
     stats = DescriptiveStatistics::Stats.new(items_count)
     stats.mean.round(2)
+
   end
 
   def average_items_per_merchant_standard_deviation
     items_count = merch_repo.all.map{|m|m.item_count}
-    stats = DescriptiveStatistics::Stats.new(items_count)
-    stats.standard_deviation.round(2)
+    standard_deviation(items_count).round(2)
   end
 
   def merchants_with_low_item_count
@@ -46,4 +46,24 @@ class SalesAnalyst
 
   def golden_items
   end
+
+  def variance(array)
+    return if array.length < 1
+    precalculated_mean = mean(array)
+    sum = array.inject(0) do |accumulator, value|
+      accumulator + (value - precalculated_mean) ** 2
+    end
+    sum / (array.length.to_f - 1)
+  end
+
+  def standard_deviation(array)
+    return if array.length < 2
+    Math.sqrt(variance(array))
+  end
+
+  def mean(array)
+    return if array.length < 1
+    array.inject(0, :+) / array.length.to_f
+  end
+
 end
