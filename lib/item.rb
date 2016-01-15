@@ -21,9 +21,7 @@ class Item
   end
 
   def unit_price
-    price = data[:unit_price].to_s
-    price = price.sub(".", "")
-    BigDecimal.new(price.insert(-3, "."))
+    BigDecimal.new(data[:unit_price]) / 100
   end
 
   def merchant_id

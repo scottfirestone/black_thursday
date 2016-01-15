@@ -45,7 +45,7 @@ class ItemRepository
 
   def find_all_by_price(price)
     items.select do |item|
-      item.unit_price == price.to_f
+      item.unit_price == BigDecimal.new(price.to_s)
     end
   end
 
