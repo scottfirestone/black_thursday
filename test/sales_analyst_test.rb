@@ -1,6 +1,6 @@
 require 'test_helper'
 require 'sales_analyst'
-
+require 'pry'
 class SalesAnalystTest < Minitest::Test
   attr_reader :se, :mr_sample
 
@@ -56,8 +56,8 @@ class SalesAnalystTest < Minitest::Test
   def test_the_average_price_per_merchant
     se = SalesEngine.from_csv({:items => "test_items.csv", :merchants => "sa_test_merchants.csv"})
     sa = SalesAnalyst.new(se)
-    
-    expected = [2999, 1500, 15000, 2000, 10147.06, 3500]
+
+    expected = [29.99, 15.00, 150.00, 20.00, 101.47, 35.00]
     actual = sa.merch_repo.all.map do |merchant|
       merchant.average_item_price
     end
@@ -66,6 +66,12 @@ class SalesAnalystTest < Minitest::Test
     assert 5857.68, sa.average_price_per_merchant
   end
 
-  def golden_items
+  def test_golden_items
+    se = SalesEngine.from_csv({:items => "sa_test_items.csv", :merchants => "sa_test_merchants.csv"})
+    sa = SalesAnalyst.new(se)
+    our_info = sa.item_repo.all.map do |item|
+      item.unit_price
+    end
+    assert_equal [], sa.golden_items
   end
 end

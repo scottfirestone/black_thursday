@@ -99,23 +99,22 @@ require 'item_repository'
 
    def test_find_all_by_price_method_returns_all_matching_item_instances
      ir = ItemRepository.new(items_data)
-     found_price_array = ir.find_all_by_price("2390").map { |item| item.unit_price }
+     found_price_array = ir.find_all_by_price(23.90).map { |item| item.unit_price }
 
      assert_equal 3, found_price_array.size
-
-     unit_price_match = found_price_array.all? { |price| price == BigDecimal.new("2390", 4)}
+     unit_price_match = found_price_array.all? { |price| price == 23.90 }
      assert unit_price_match
    end
 
    def test_find_all_by_price_in_range
      ir = ItemRepository.new(items_data)
-     found_price_array = ir.find_all_by_price_in_range(2389..2391).map { |item| item.unit_price }
+     found_price_array = ir.find_all_by_price_in_range(23.89..23.91).map { |item| item.unit_price }
      assert_equal 3, found_price_array.size
 
-     found_price_array = ir.find_all_by_price_in_range(2389..30000).map { |item| item.unit_price }
+     found_price_array = ir.find_all_by_price_in_range(23.89..300.00).map { |item| item.unit_price }
      assert_equal 87, found_price_array.size
 
-     found_price_array = ir.find_all_by_price_in_range(0..9)
+     found_price_array = ir.find_all_by_price_in_range(0..0.09)
      assert_equal [], found_price_array
    end
  end

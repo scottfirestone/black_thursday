@@ -45,6 +45,6 @@ class MerchantTest < Minitest::Test
       :merchants => "./test_merchants.csv",
       })
     merchant = se.merchants.find_by_id(12334123)
-    assert_equal 10147.06, merchant.average_item_price
+    assert_equal 101.47, merchant.average_item_price
   end
 end

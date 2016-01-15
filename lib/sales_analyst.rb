@@ -9,7 +9,6 @@ class SalesAnalyst
     @item_repo = sales_engine.items
   end
 
-  ##rename to item_counts
   def average_items_per_merchant
     items_count = merch_repo.all.map{|m|m.item_count}
     mean(items_count).round(2)
@@ -17,7 +16,7 @@ class SalesAnalyst
   end
 
   def average_items_per_merchant_standard_deviation
-    items_count = merch_repo.all.map{|m|m.item_count}
+    items_count = merch_repo.all.map { |m| m.item_count }
     standard_deviation(items_count).round(2)
   end
 
@@ -43,6 +42,13 @@ class SalesAnalyst
   end
 
   def golden_items
+    item_prices = item_repo.all.map do |item|
+      item.unit_price
+    end
+    average_item_price = item_prices.reduce(0, :+) / item_repo.all.length
+    item_repo.all.select do |item|
+      item.unit_price > (average_item_price + (2 * (standard_deviation(item_prices))))
+    end
   end
 
   def variance(array)
@@ -63,5 +69,4 @@ class SalesAnalyst
     return if array.length < 1
     array.inject(0, :+) / array.length.to_f
   end
-
 end
