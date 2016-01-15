@@ -1,5 +1,4 @@
 require_relative 'sales_engine'
-require 'descriptive-statistics'
 require 'bigdecimal'
 
 class SalesAnalyst
@@ -10,10 +9,10 @@ class SalesAnalyst
     @item_repo = sales_engine.items
   end
 
+  ##rename to item_counts
   def average_items_per_merchant
     items_count = merch_repo.all.map{|m|m.item_count}
-    stats = DescriptiveStatistics::Stats.new(items_count)
-    stats.mean.round(2)
+    mean(items_count).round(2)
 
   end
 
@@ -40,8 +39,7 @@ class SalesAnalyst
     average_merchants_price = merch_repo.all.map do |merchant|
       average_item_price_for_merchant(merchant.id)
     end
-    stats = DescriptiveStatistics::Stats.new(average_merchants_price)
-    stats.mean.round(2)
+    mean(average_merchants_price).round(2)
   end
 
   def golden_items
