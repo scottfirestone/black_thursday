@@ -1,24 +1,12 @@
 class Invoice
-  attr_reader :data
+  attr_reader :data, :id, :customer_id, :merchant_id, :status
 
   def initialize(data)
     @data = data
-  end
-
-  def id
-    data[:id].to_i
-  end
-
-  def customer_id
-    data[:customer_id].to_i
-  end
-
-  def merchant_id
-    data[:merchant_id].to_i
-  end
-
-  def status
-    data[:status].to_sym
+    @id = data[:id].to_i
+    @customer_id = data[:customer_id].to_i
+    @merchant_id = data[:merchant_id].to_i
+    @status = data[:status].to_sym
   end
 
   def created_at

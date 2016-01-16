@@ -51,33 +51,12 @@ class SalesAnalyst
     end
   end
 
-  def variance(array)
-    return if array.length < 1
-    precalculated_mean = mean(array)
-    sum = array.inject(0) do |accumulator, value|
-      accumulator + (value - precalculated_mean) ** 2
-    end
-    sum / (array.length.to_f - 1)
-  end
-
-  def standard_deviation(array)
-    return if array.length < 2
-    Math.sqrt(variance(array))
-  end
-
-  def mean(array)
-    return if array.length < 1
-    array.inject(0, :+) / array.length.to_f
-  end
-
   def average_invoices_per_merchant
-    invoice_counts = merch_repo.all.map { |merchant| merchant.invoices.count }
     mean(invoice_counts).round(2)
   end
 
   def average_invoices_per_merchant_standard_deviation
-    invoices_count = merch_repo.all.map { |m| m.invoices.count }
-    standard_deviation(invoices_count).round(2)
+    standard_deviation(invoice_counts).round(2)
   end
 
   def top_merchants_by_invoice_count
@@ -97,16 +76,9 @@ class SalesAnalyst
   end
 
   def top_days_by_invoice_count
-    invoice_days = invoice_repo.all.map do |invoice|
-      invoice.created_at.strftime("%A")
-    end
-    day_counts = Hash.new(0)
-    invoice_days.each do |day|
-      day_counts[day.to_sym] += 1
-    end
-    mean = mean(day_counts.values).round(2)
-    std_dev = standard_deviation(day_counts.values).round(2)
-    day_counts.select do |day, number|
+    mean = mean(sales_per_day.values).round(2)
+    std_dev = standard_deviation(sales_per_day.values).round(2)
+    sales_per_day.select do |day, number|
       number > (mean + std_dev)
     end.keys
   end
@@ -117,4 +89,44 @@ class SalesAnalyst
     end
     ((matching_status_invoices.count.to_f / invoice_repo.all.count) * 100).round(2)
   end
+
+  private
+
+  def invoice_counts
+    merch_repo.all.map { |merchant| merchant.invoices.count }
+  end
+
+  def sales_per_day
+    day_counts = Hash.new(0)
+    extract_invoice_days.each do |day|
+      day_counts[day.to_sym] += 1
+    end
+    day_counts
+  end
+
+  def extract_invoice_days
+    invoice_repo.all.map do |invoice|
+      invoice.created_at.strftime("%A")
+    end
+  end
+
+  def variance(array)
+    return if array.length < 1
+    precalculated_mean = mean(array)
+    sum = array.inject(0) do |accumulator, value|
+      accumulator + (value - precalculated_mean) ** 2
+    end
+    sum / (array.length.to_f - 1)
+  end
+
+  def standard_deviation(array)
+    return if array.length < 2
+    Math.sqrt(variance(array))
+  end
+
+  def mean(array)
+    return if array.length < 1
+    array.inject(0, :+) / array.length.to_f
+  end
+
 end

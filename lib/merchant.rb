@@ -18,8 +18,8 @@ class Merchant
   end
 
   def average_item_price
-    sum_prices = items.map { |item| item.unit_price_to_dollars }.reduce(0, :+)
-    (sum_prices / item_count).to_f.round(2)
+    sum_prices = (items.map { |item| item.unit_price }.reduce(0, :+) / 100)
+    (sum_prices / item_count).round(2)
   end
 
   def invoices

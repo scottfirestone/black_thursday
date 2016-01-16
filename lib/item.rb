@@ -2,38 +2,22 @@ require 'bigdecimal'
 require 'sales_engine'
 
 class Item
-  attr_reader :data
-
+  attr_reader :data, :id, :name, :description, :unit_price, :merchant_id
   def initialize(data)
     @data = data
-  end
-
-  def id
-    data[:id].to_i
-  end
-
-  def name
-    data[:name]
-  end
-
-  def description
-    data[:description]
-  end
-
-  def unit_price
-    BigDecimal.new(data[:unit_price])
-  end
-
-  def merchant_id
-    data[:merchant_id].to_i
+    @id = data[:id].to_i
+    @name = data[:name]
+    @description = data[:description]
+    @unit_price = BigDecimal.new(data[:unit_price])
+    @merchant_id = data[:merchant_id].to_i
   end
 
   def created_at
-    Time.parse(data[:created_at]) if data[:created_at]
+    @created_at = Time.parse(data[:created_at]) if data[:created_at]
   end
 
   def updated_at
-    Time.parse(data[:updated_at]) if data[:updated_at]
+    @updated_at = Time.parse(data[:updated_at]) if data[:updated_at]
   end
 
   def merchant

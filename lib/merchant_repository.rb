@@ -4,7 +4,7 @@ require_relative 'merchant'
 class MerchantRepository
   attr_reader :merchants
 
-  def initialize(merchants_data, merchants=nil)
+  def initialize(merchants_data)
     @merchants ||= load_data(merchants_data)
   end
 
