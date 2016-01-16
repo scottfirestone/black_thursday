@@ -41,12 +41,23 @@ class ItemTest < Minitest::Test
   ##check format
   def test_it_has_a_unit_price
     item = Item.new(item_data)
-    expected = BigDecimal("3.99")
+    expected = BigDecimal("399")
     assert_equal expected, item.unit_price
 
     item_two = Item.new({:unit_price => "580700"})
-    expected = BigDecimal("5807.00")
+    expected = BigDecimal("580700")
     assert_equal expected, item_two.unit_price
+  end
+
+  def test_unit_price_to_dollars
+    item = Item.new(item_data)
+    expected = 3.99
+    assert_equal expected, item.unit_price_to_dollars
+
+    item_two = Item.new({:unit_price => "580700"})
+    expected = 5807.00
+    assert_equal expected, item_two.unit_price_to_dollars
+
   end
 
   def test_it_has_a_merchant_id

@@ -99,7 +99,7 @@ require 'item_repository'
 
    def test_find_all_by_price_method_returns_all_matching_item_instances
      ir = ItemRepository.new(items_data)
-     found_price_array = ir.find_all_by_price(23.90).map { |item| item.unit_price }
+     found_price_array = ir.find_all_by_price(23.90).map { |item| item.unit_price_to_dollars }
 
      assert_equal 3, found_price_array.size
      unit_price_match = found_price_array.all? { |price| price == 23.90 }

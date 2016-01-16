@@ -20,12 +20,12 @@ class SalesAnalyst
     standard_deviation(items_count).round(2)
   end
 
-  def merchants_with_low_item_count
+  def merchants_with_high_item_count
     mean = average_items_per_merchant
     std_dev = average_items_per_merchant_standard_deviation
 
     merch_repo.all.select do |merchant|
-      merchant.item_count < (mean - std_dev)
+      merchant.item_count > (mean + std_dev)
     end
   end
 
@@ -34,9 +34,9 @@ class SalesAnalyst
     merchant.average_item_price
   end
 
-  def average_price_per_merchant
+  def average_average_price_per_merchant
     average_merchants_price = merch_repo.all.map do |merchant|
-      average_item_price_for_merchant(merchant.id)
+      merchant.item_count == 0 ? 0 : average_item_price_for_merchant(merchant.id)
     end
     mean(average_merchants_price).round(2)
   end

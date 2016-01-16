@@ -21,7 +21,7 @@ class Item
   end
 
   def unit_price
-    BigDecimal.new(data[:unit_price]) / 100
+    BigDecimal.new(data[:unit_price])
   end
 
   def merchant_id
@@ -39,5 +39,9 @@ class Item
   def merchant
     mr = SalesEngine.merchants
     mr.find_by_id(merchant_id)
+  end
+
+  def unit_price_to_dollars
+    (unit_price / 100).to_f
   end
 end

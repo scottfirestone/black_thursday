@@ -33,13 +33,13 @@ class SalesAnalystTest < Minitest::Test
     assert_equal 6.42, sa.average_items_per_merchant_standard_deviation
   end
 
-  def test_the_merchants_with_low_item_count
+  def test_the_merchants_with_high_item_count
     se = SalesEngine.from_csv({:items => "test_items.csv", :merchants => "sa_test_merchants.csv"})
     sa = SalesAnalyst.new(se)
-    merchants_items = se.merchants.all.map{|m|m.item_count}
+    merchants_items = se.merchants.all.map { |m| m.item_count }
     assert_equal [1, 1, 1, 1, 17, 3], merchants_items
-    assert_equal 0, sa.merchants_with_low_item_count.length
-    assert_equal [], sa.merchants_with_low_item_count.map { |m| m.item_count}
+    assert_equal 1, sa.merchants_with_high_item_count.length
+    assert_equal [17], sa.merchants_with_high_item_count.map { |m| m.item_count}
   end
 
   def test_the_average_item_price_for_merchant
@@ -63,7 +63,7 @@ class SalesAnalystTest < Minitest::Test
     end
 
     assert_equal expected, actual
-    assert 5857.68, sa.average_price_per_merchant
+    assert 5857.68, sa.average_average_price_per_merchant
   end
 
   def test_golden_items

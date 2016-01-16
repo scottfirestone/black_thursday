@@ -26,7 +26,5 @@ if __FILE__ == $0
     :items     => "./data/items.csv",
     :merchants => "./data/merchants.csv"
   })
-
-  mr = se.merchants
-  merchant = mr.find_by_name("")
+  merchant = se.merchants.find_by_name("")
 end
