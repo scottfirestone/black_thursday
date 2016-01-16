@@ -1,12 +1,13 @@
 require_relative 'sales_engine'
 require 'bigdecimal'
-
+require 'pry'
 class SalesAnalyst
-  attr_reader :merch_repo, :item_repo
+  attr_reader :merch_repo, :item_repo, :invoice_repo
 
   def initialize(sales_engine)
-    @merch_repo = sales_engine.merchants
-    @item_repo = sales_engine.items
+    @merch_repo   = sales_engine.merchants
+    @item_repo    = sales_engine.items
+    @invoice_repo = sales_engine.invoices
   end
 
   def average_items_per_merchant
@@ -67,5 +68,56 @@ class SalesAnalyst
   def mean(array)
     return if array.length < 1
     array.inject(0, :+) / array.length.to_f
+  end
+
+  def average_invoices_per_merchant
+    invoice_counts = merch_repo.all.map { |merchant| merchant.invoices.count }
+    mean(invoice_counts).round(2)
+  end
+
+  def average_invoices_per_merchant_standard_deviation
+    invoices_count = merch_repo.all.map { |m| m.invoices.count }
+    standard_deviation(invoices_count).round(2)
+  end
+
+  def top_merchants_by_invoice_count
+    mean = average_invoices_per_merchant
+    std_dev = average_invoices_per_merchant_standard_deviation
+    merch_repo.all.select do |merchant|
+      merchant.invoices.count > (mean + (2 * (std_dev)))
+    end
+  end
+
+  def bottom_merchants_by_invoice_count
+    mean = average_invoices_per_merchant
+    std_dev = average_invoices_per_merchant_standard_deviation
+    merch_repo.all.select do |merchant|
+      merchant.invoices.count < (mean - (2 * (std_dev)))
+    end
+  end
+
+  def top_days_by_invoice_count
+    invoice_days = invoice_repo.all.map do |invoice|
+      invoice.created_at.strftime("%A")
+    end
+    ugly = invoice_days.group_by do |day|
+      day
+    end
+    invoices_per_day = ugly.each do |day, number|
+      ugly[day] = number.count
+    end
+    mean = mean(invoices_per_day.values).round(2)
+    std_dev = standard_deviation(invoices_per_day.values).round(2)
+    ziggy = invoices_per_day.select do |day, number|
+      number > (mean + std_dev)
+    end.keys
+    ziggy.map { |d| d.to_sym }
+  end
+
+  def invoice_status(status)
+    matching_status_invoices = invoice_repo.all.select do |invoice|
+      invoice.status == status
+    end
+    ((matching_status_invoices.count.to_f / invoice_repo.all.count) * 100).round(2)
   end
 end

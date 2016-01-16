@@ -12,7 +12,7 @@ class SalesAnalystTest < Minitest::Test
     sa = SalesAnalyst.new(se)
     assert_equal SalesAnalyst, sa.class
   end
-  #start fresh with this test
+
   def test_the_average_items_per_merchant
     se = SalesEngine.from_csv({:items => "test_items.csv", :merchants => "sa_test_merchants.csv", :invoices => "test_invoices.csv"})
     sa = SalesAnalyst.new(se)
@@ -73,5 +73,58 @@ class SalesAnalystTest < Minitest::Test
       item.unit_price
     end
     assert_equal [], sa.golden_items
+  end
+
+  def test_average_invoices_per_merchant
+    se = SalesEngine.from_csv({:items => "test_items.csv", :merchants => "sa_test_merchants.csv", :invoices => "test_invoices.csv"})
+    sa = SalesAnalyst.new(se)
+
+    merchants_count = se.merchants.all.count
+    assert_equal 6, merchants_count
+    invoices_count = se.merchants.all.map{|m|m.invoices.count}.reduce(0, :+)
+
+    assert_equal 3, invoices_count
+    assert_equal 0.5, sa.average_invoices_per_merchant
+  end
+
+  def test_the_average_invoices_per_merchant_standard_deviation
+    se = SalesEngine.from_csv({:items => "test_items.csv", :merchants => "sa_test_merchants.csv", :invoices => "test_invoices.csv"})
+    sa = SalesAnalyst.new(se)
+    merchants_invoices = se.merchants.all.map{ |m| m.invoices.count}
+    assert_equal [0, 0, 0, 0, 3, 0], merchants_invoices
+    assert_equal 1.22, sa.average_invoices_per_merchant_standard_deviation
+  end
+
+  def test_top_merchants_by_invoice_count
+    se = SalesEngine.from_csv({:items => "test_items.csv", :merchants => "sa_test_merchants.csv", :invoices => "test_invoices.csv"})
+    sa = SalesAnalyst.new(se)
+    merchants_invoices = se.merchants.all.map { |m| m.invoices.count }
+    assert_equal [0, 0, 0, 0, 3, 0], merchants_invoices
+    assert_equal 1, sa.top_merchants_by_invoice_count.length
+    assert_equal [3], sa.top_merchants_by_invoice_count.map { |m| m.invoices.count}
+  end
+
+  def test_bottom_merchants_by_invoice_count
+    se = SalesEngine.from_csv({:items => "test_items.csv", :merchants => "sa_test_merchants.csv", :invoices => "test_invoices.csv"})
+    sa = SalesAnalyst.new(se)
+    merchants_invoices = se.merchants.all.map { |m| m.invoices.count }
+    assert_equal [0, 0, 0, 0, 3, 0], merchants_invoices
+    assert_equal 0, sa.bottom_merchants_by_invoice_count.length
+    assert_equal [], sa.bottom_merchants_by_invoice_count.map { |m| m.invoices.count }
+  end
+
+  def test_top_days_by_invoice_count
+    se = SalesEngine.from_csv({:items => "test_items.csv", :merchants => "sa_test_merchants.csv", :invoices => "test_invoices.csv"})
+    sa = SalesAnalyst.new(se)
+    ##beef up this test, intermediate assertions to clarify
+    assert_equal [:Friday], sa.top_days_by_invoice_count
+  end
+
+  def test_invoice_status_returns_percentage_with_matching_status
+    se = SalesEngine.from_csv({:items => "test_items.csv", :merchants => "sa_test_merchants.csv", :invoices => "test_invoices.csv"})
+    sa = SalesAnalyst.new(se)
+    assert_equal 40, sa.invoice_status(:shipped)
+    assert_equal 53.33, sa.invoice_status(:pending)
+    assert_equal 6.67, sa.invoice_status(:returned)
   end
 end
