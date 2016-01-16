@@ -1,13 +1,15 @@
 require_relative 'merchant_repository'
 require_relative 'item_repository'
+require_relative 'invoice_repository'
 
 class SalesEngine
 
-  attr_reader :data, :merchants, :items
+  attr_reader :merchants, :items, :invoices
 
-  def self.from_csv(data)
-    @merchants = MerchantRepository.new(data[:merchants])
-    @items = ItemRepository.new(data[:items])
+  def self.from_csv(csv)
+    @merchants = MerchantRepository.new(csv[:merchants])
+    @items = ItemRepository.new(csv[:items])
+    @invoices = InvoiceRepository.new(csv[:invoices])
     self
   end
 
@@ -17,6 +19,10 @@ class SalesEngine
 
   def self.items
     @items
+  end
+
+  def self.invoices
+    @invoices
   end
 
 end

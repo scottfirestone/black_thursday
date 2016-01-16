@@ -12,7 +12,6 @@ class SalesAnalyst
   def average_items_per_merchant
     items_count = merch_repo.all.map{|m|m.item_count}
     mean(items_count).round(2)
-
   end
 
   def average_items_per_merchant_standard_deviation

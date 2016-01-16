@@ -22,6 +22,7 @@ class MerchantTest < Minitest::Test
     se = SalesEngine.from_csv({
       :items     => "./test_items.csv",
       :merchants => "./test_merchants.csv",
+      :invoices => "./test_invoices.csv"
       })
     merchant = se.merchants.find_by_id(12334105)
     assert merchant.items
@@ -31,6 +32,7 @@ class MerchantTest < Minitest::Test
     se = SalesEngine.from_csv({
       :items     => "./test_items.csv",
       :merchants => "./test_merchants.csv",
+      :invoices => "./test_invoices.csv"
       })
     merchant = se.merchants.find_by_id(12334105)
     assert_equal 1, merchant.item_count
@@ -43,6 +45,7 @@ class MerchantTest < Minitest::Test
     se = SalesEngine.from_csv({
       :items     => "./test_items.csv",
       :merchants => "./test_merchants.csv",
+      :invoices => "./test_invoices.csv"
       })
     merchant = se.merchants.find_by_id(12334123)
     assert_equal 101.47, merchant.average_item_price

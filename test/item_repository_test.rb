@@ -22,12 +22,11 @@ require 'item_repository'
 
    def test_all_method_returns_array_of_item_instances
      ir = ItemRepository.new(items_data)
-     actual = ir.items.sample.class
+     actual = ir.all.sample.class
      expected = Item
      assert_equal expected, actual
    end
 
-   ##refactor!!!!
    def test_all_method_returns_all_item_instances
      ir = ItemRepository.new(items_data)
      csv = CSV.open("test_items.csv", headers:true, header_converters: :symbol)
@@ -52,7 +51,6 @@ require 'item_repository'
      refute_equal 000000000, found_item.id
    end
 
-   ##ask trey about refute vs assert_equal nil
    def test_find_by_id_method_returns_nil_if_no_match
      ir = ItemRepository.new(items_data)
      assert_equal nil, ir.find_by_id(001)

@@ -5,7 +5,7 @@ class SalesAnalystTest < Minitest::Test
   attr_reader :se, :mr_sample
 
   def setup
-    @se = SalesEngine.from_csv({:items => "test_items.csv", :merchants => "test_merchants.csv"})
+    @se = SalesEngine.from_csv({:items => "test_items.csv", :merchants => "test_merchants.csv", :invoices => "test_invoices.csv"})
   end
 
   def test_it_is_a_sales_analyst_object
@@ -14,7 +14,7 @@ class SalesAnalystTest < Minitest::Test
   end
   #start fresh with this test
   def test_the_average_items_per_merchant
-    se = SalesEngine.from_csv({:items => "test_items.csv", :merchants => "sa_test_merchants.csv"})
+    se = SalesEngine.from_csv({:items => "test_items.csv", :merchants => "sa_test_merchants.csv", :invoices => "test_invoices.csv"})
     sa = SalesAnalyst.new(se)
 
     merchants_count = se.merchants.all.count
@@ -26,7 +26,7 @@ class SalesAnalystTest < Minitest::Test
   end
 
   def test_the_average_items_per_merchant_standard_deviation
-    se = SalesEngine.from_csv({:items => "test_items.csv", :merchants => "sa_test_merchants.csv"})
+    se = SalesEngine.from_csv({:items => "test_items.csv", :merchants => "sa_test_merchants.csv", :invoices => "test_invoices.csv"})
     sa = SalesAnalyst.new(se)
     merchants_items = se.merchants.all.map{|m|m.item_count}
     assert_equal [1, 1, 1, 1, 17, 3], merchants_items
@@ -34,7 +34,7 @@ class SalesAnalystTest < Minitest::Test
   end
 
   def test_the_merchants_with_high_item_count
-    se = SalesEngine.from_csv({:items => "test_items.csv", :merchants => "sa_test_merchants.csv"})
+    se = SalesEngine.from_csv({:items => "test_items.csv", :merchants => "sa_test_merchants.csv", :invoices => "test_invoices.csv"})
     sa = SalesAnalyst.new(se)
     merchants_items = se.merchants.all.map { |m| m.item_count }
     assert_equal [1, 1, 1, 1, 17, 3], merchants_items
@@ -43,7 +43,7 @@ class SalesAnalystTest < Minitest::Test
   end
 
   def test_the_average_item_price_for_merchant
-    se = SalesEngine.from_csv({:items => "test_items.csv", :merchants => "sa_test_merchants.csv"})
+    se = SalesEngine.from_csv({:items => "test_items.csv", :merchants => "sa_test_merchants.csv", :invoices => "test_invoices.csv"})
     sa = SalesAnalyst.new(se)
     merchant_id = 12334123
     merchant = se.merchants.find_by_id(merchant_id)
@@ -54,7 +54,7 @@ class SalesAnalystTest < Minitest::Test
   end
 
   def test_the_average_price_per_merchant
-    se = SalesEngine.from_csv({:items => "test_items.csv", :merchants => "sa_test_merchants.csv"})
+    se = SalesEngine.from_csv({:items => "test_items.csv", :merchants => "sa_test_merchants.csv", :invoices => "test_invoices.csv"})
     sa = SalesAnalyst.new(se)
 
     expected = [29.99, 15.00, 150.00, 20.00, 101.47, 35.00]
@@ -67,7 +67,7 @@ class SalesAnalystTest < Minitest::Test
   end
 
   def test_golden_items
-    se = SalesEngine.from_csv({:items => "sa_test_items.csv", :merchants => "sa_test_merchants.csv"})
+    se = SalesEngine.from_csv({:items => "sa_test_items.csv", :merchants => "sa_test_merchants.csv", :invoices => "test_invoices.csv"})
     sa = SalesAnalyst.new(se)
     our_info = sa.item_repo.all.map do |item|
       item.unit_price

@@ -38,7 +38,6 @@ class ItemTest < Minitest::Test
     assert_equal expected, item.description
   end
 
-  ##check format
   def test_it_has_a_unit_price
     item = Item.new(item_data)
     expected = BigDecimal("399")
@@ -57,7 +56,6 @@ class ItemTest < Minitest::Test
     item_two = Item.new({:unit_price => "580700"})
     expected = 5807.00
     assert_equal expected, item_two.unit_price_to_dollars
-
   end
 
   def test_it_has_a_merchant_id
@@ -94,6 +92,7 @@ class ItemTest < Minitest::Test
     se = SalesEngine.from_csv({
       :items     => "./test_items.csv",
       :merchants => "./test_merchants.csv",
+      :invoices  => "./test_merchants.csv"
       })
     item = se.items.find_by_id(263395237)
     assert item.merchant

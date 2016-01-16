@@ -4,8 +4,8 @@ require 'csv'
 class ItemRepository
   attr_reader :items
 
-  def initialize(items_data)
-    @items ||= load_data(items_data)
+  def initialize(items_csv)
+    @items ||= load_data(items_csv)
   end
 
   def load_data(items)
