@@ -21,11 +21,11 @@ class InvoiceRepositoryTest < Minitest::Test
     count = 0
     csv.each { |line| count +=1 }
 
-    assert_equal 12, count
+    assert_equal 15, count
 
     all_invoices = inv_repo.all
 
-    assert_equal 12, all_invoices.length
+    assert_equal 15, all_invoices.length
   end
 
   def test_find_by_id_method_returns_invoice_instance
@@ -70,7 +70,7 @@ class InvoiceRepositoryTest < Minitest::Test
   def test_find_all_by_status_returns_array_of_invoices_with_matching_status
     inv_repo = InvoiceRepository.new("test_invoices.csv")
     invoice_statuses = inv_repo.find_all_by_status(:shipped).map { |invoice| invoice.status }
-    assert_equal 5, invoice_statuses.size
+    assert_equal 6, invoice_statuses.size
 
     status_matches = invoice_statuses.all? { |status| status == :shipped }
     assert status_matches

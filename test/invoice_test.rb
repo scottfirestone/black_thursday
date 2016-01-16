@@ -65,13 +65,13 @@ class InvoiceTest < Minitest::Test
     assert_equal nil, invoice.updated_at
   end
 
-  # def test_merchant_method_returns_merchant_with_matching_id
-  #   se = SalesEngine.from_csv({
-  #     :items     => "./test_items.csv",
-  #     :merchants => "./test_merchants.csv",
-  #     :invoices  => "./test_merchants.csv"
-  #     })
-  #   invoice = se.invoices.find_by_id(263395237)
-  #   assert invoice.merchant
-  # end
+  def test_merchant_method_returns_merchant_with_matching_id
+    se = SalesEngine.from_csv({
+      :items     => "./test_items.csv",
+      :merchants => "./test_merchants.csv",
+      :invoices  => "./test_invoices.csv"
+      })
+    invoice = se.invoices.find_by_id(175)
+    assert_equal Merchant, invoice.merchant.class
+  end
 end

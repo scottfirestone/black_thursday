@@ -50,4 +50,15 @@ class MerchantTest < Minitest::Test
     merchant = se.merchants.find_by_id(12334123)
     assert_equal 101.47, merchant.average_item_price
   end
+
+  def test_invoices_returns_all_matching_invoices
+    se = SalesEngine.from_csv({
+      :items     => "./test_items.csv",
+      :merchants => "./test_merchants.csv",
+      :invoices => "./test_invoices.csv"
+      })
+    merchant = se.merchants.find_by_id(12334123)
+    assert_equal 3, merchant.invoices.size
+
+  end
 end
