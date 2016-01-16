@@ -100,18 +100,15 @@ class SalesAnalyst
     invoice_days = invoice_repo.all.map do |invoice|
       invoice.created_at.strftime("%A")
     end
-    ugly = invoice_days.group_by do |day|
-      day
+    day_counts = Hash.new(0)
+    invoice_days.each do |day|
+      day_counts[day.to_sym] += 1
     end
-    invoices_per_day = ugly.each do |day, number|
-      ugly[day] = number.count
-    end
-    mean = mean(invoices_per_day.values).round(2)
-    std_dev = standard_deviation(invoices_per_day.values).round(2)
-    ziggy = invoices_per_day.select do |day, number|
+    mean = mean(day_counts.values).round(2)
+    std_dev = standard_deviation(day_counts.values).round(2)
+    day_counts.select do |day, number|
       number > (mean + std_dev)
     end.keys
-    ziggy.map { |d| d.to_sym }
   end
 
   def invoice_status(status)

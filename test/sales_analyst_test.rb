@@ -116,7 +116,10 @@ class SalesAnalystTest < Minitest::Test
   def test_top_days_by_invoice_count
     se = SalesEngine.from_csv({:items => "test_items.csv", :merchants => "sa_test_merchants.csv", :invoices => "test_invoices.csv"})
     sa = SalesAnalyst.new(se)
-    ##beef up this test, intermediate assertions to clarify
+    invoice_days = sa.invoice_repo.all.map { |invoice| invoice.created_at.strftime("%A")}
+    expected = ["Saturday", "Friday", "Wednesday", "Monday", "Saturday", "Friday", "Monday", "Friday", "Friday", "Sunday", "Tuesday", "Monday", "Monday", "Wednesday", "Friday"]
+    assert_equal expected, invoice_days
+
     assert_equal [:Friday], sa.top_days_by_invoice_count
   end
 
