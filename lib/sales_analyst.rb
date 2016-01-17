@@ -92,6 +92,12 @@ class SalesAnalyst
 
   private
 
+  def group_by_top_score
+    #here we want to take in the various scores
+    #then we want to iterate over it
+    #return value should be sorted array
+  end
+  
   def invoice_counts
     merch_repo.all.map { |merchant| merchant.invoices.count }
   end

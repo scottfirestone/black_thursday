@@ -92,7 +92,10 @@ class ItemTest < Minitest::Test
     se = SalesEngine.from_csv({
       :items     => "./test_items.csv",
       :merchants => "./test_merchants.csv",
-      :invoices  => "./test_invoices.csv"
+      :invoices  => "./test_invoices.csv",
+      :invoice_items => "./test_invoice_items.csv",
+      :transactions => "./test_transactions.csv",
+      :customers => "./test_customers.csv"
       })
     item = se.items.find_by_id(263395237)
     assert item.merchant

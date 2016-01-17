@@ -11,12 +11,12 @@ class InvoiceRepository
   def load_data(invoices)
     csv = CSV.open(invoices, headers: true, header_converters: :symbol)
     @invoices = csv.map do |row|
-      Invoice.new({:id          => row[:id],
-                :customer_id => row[:customer_id],
-                :merchant_id => row[:merchant_id],
-                :status      => row[:status],
-                :created_at  => row[:created_at],
-                :updated_at  => row[:updated_at]})
+      Invoice.new({ :id          => row[:id],
+                    :customer_id => row[:customer_id],
+                    :merchant_id => row[:merchant_id],
+                    :status      => row[:status],
+                    :created_at  => row[:created_at],
+                    :updated_at  => row[:updated_at]})
     end
   end
 

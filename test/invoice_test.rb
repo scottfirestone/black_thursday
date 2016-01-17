@@ -69,7 +69,10 @@ class InvoiceTest < Minitest::Test
     se = SalesEngine.from_csv({
       :items     => "./test_items.csv",
       :merchants => "./test_merchants.csv",
-      :invoices  => "./test_invoices.csv"
+      :invoices  => "./test_invoices.csv",
+      :invoice_items => "./test_invoice_items.csv",
+      :transactions => "./test_transactions.csv",
+      :customers => "./test_customers.csv"
       })
     invoice = se.invoices.find_by_id(175)
     assert_equal Merchant, invoice.merchant.class
