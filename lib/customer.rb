@@ -15,9 +15,4 @@ class Customer
   def updated_at
     Time.parse(data[:updated_at]) if data[:updated_at]
   end
-  #
-  # def merchant
-  #   merch_repo = SalesEngine.merchants
-  #   merch_repo.find_by_id(merchant_id)
-  # end
 end
