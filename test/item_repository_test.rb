@@ -2,33 +2,34 @@ require 'test_helper'
 require 'item_repository'
 
  class ItemRepositoryTest < Minitest::Test
-   attr_reader :items_data
+   attr_reader :items_data, :sales_engine
 
    def setup
      @items_data = "test_items.csv"
+     @sales_engine = mock()
    end
 
    def test_item_repository_instance
-     ir = ItemRepository.new(items_data)
+     ir = ItemRepository.new(items_data, sales_engine)
      assert ir
    end
 
    def test_load_data_gives_array
-     ir = ItemRepository.new(items_data)
+     ir = ItemRepository.new(items_data, sales_engine)
      expected = Array
      actual = ir.items.class
      assert_equal expected, actual
    end
 
    def test_all_method_returns_array_of_item_instances
-     ir = ItemRepository.new(items_data)
+     ir = ItemRepository.new(items_data, sales_engine)
      actual = ir.all.sample.class
      expected = Item
      assert_equal expected, actual
    end
 
    def test_all_method_returns_all_item_instances
-     ir = ItemRepository.new(items_data)
+     ir = ItemRepository.new(items_data, sales_engine)
      csv = CSV.open("test_items.csv", headers:true, header_converters: :symbol)
      count = 0
      csv.each { |line| count +=1 }
@@ -41,7 +42,7 @@ require 'item_repository'
    end
 
    def test_find_by_id_method_returns_item_instance
-     ir = ItemRepository.new(items_data)
+     ir = ItemRepository.new(items_data, sales_engine)
      found_item = ir.find_by_id(263395237)
 
      assert_equal Item, found_item.class
@@ -52,12 +53,12 @@ require 'item_repository'
    end
 
    def test_find_by_id_method_returns_nil_if_no_match
-     ir = ItemRepository.new(items_data)
+     ir = ItemRepository.new(items_data, sales_engine)
      assert_equal nil, ir.find_by_id(001)
    end
 
    def test_find_by_name_method_returns_item_instance
-     ir = ItemRepository.new(items_data)
+     ir = ItemRepository.new(items_data, sales_engine)
      found_item = ir.find_by_name("510+ RealPush Icon Set")
 
      assert_equal Item, found_item.class
@@ -72,12 +73,12 @@ require 'item_repository'
    end
 
    def test_find_by_name_method_returns_nil_if_no_match
-     ir = ItemRepository.new(items_data)
+     ir = ItemRepository.new(items_data, sales_engine)
      assert_equal nil, ir.find_by_name("Centower")
    end
 
    def test_find_all_by_description_method_returns_all_matching_instances
-     ir = ItemRepository.new(items_data)
+     ir = ItemRepository.new(items_data, sales_engine)
      found_name_array = ir.find_all_with_description("zipper").map { |item| item.name }
 
      assert found_name_array.include?("Overnighter in Black & Gold")
@@ -86,7 +87,7 @@ require 'item_repository'
    end
 
    def test_find_all_by_merchant_id_method_returns_all_matching_item_instances
-     ir = ItemRepository.new(items_data)
+     ir = ItemRepository.new(items_data, sales_engine)
      found_merchant_id_array = ir.find_all_by_merchant_id(12334185).map { |item| item.merchant_id }
 
      assert_equal 3, found_merchant_id_array.size
@@ -96,7 +97,7 @@ require 'item_repository'
    end
 
    def test_find_all_by_price_method_returns_all_matching_item_instances
-     ir = ItemRepository.new(items_data)
+     ir = ItemRepository.new(items_data, sales_engine)
      found_price_array = ir.find_all_by_price(23.90).map { |item| item.unit_price_to_dollars }
 
      assert_equal 3, found_price_array.size
@@ -105,7 +106,7 @@ require 'item_repository'
    end
 
    def test_find_all_by_price_in_range
-     ir = ItemRepository.new(items_data)
+     ir = ItemRepository.new(items_data, sales_engine)
      found_price_array = ir.find_all_by_price_in_range(23.89..23.91).map { |item| item.unit_price }
      assert_equal 3, found_price_array.size
 

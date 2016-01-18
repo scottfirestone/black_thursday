@@ -2,10 +2,11 @@ require 'csv'
 require_relative 'transaction'
 
 class TransactionRepository
-  attr_reader :transactions
+  attr_reader :transactions, :sales_engine
 
-  def initialize(transaction_csv)
+  def initialize(transaction_csv, sales_engine)
     @transactions ||= load_data(transaction_csv)
+    @sales_engine = sales_engine
   end
 
   def load_data(transactions)
@@ -17,7 +18,8 @@ class TransactionRepository
                        :credit_card_expiration_date => row[:credit_card_expiration_date],
                        :result                      => row[:result],
                        :created_at                  => row[:created_at],
-                       :updated_at                  => row[:updated_at]})
+                       :updated_at                  => row[:updated_at]},
+                       self)
     end
   end
 
@@ -47,6 +49,10 @@ class TransactionRepository
     transactions.select do |transaction|
       transaction.result == result
     end
+  end
+
+  def find_invoice_by_invoice_id(invoice_id)
+    sales_engine.find_invoice_by_invoice_id(invoice_id)
   end
 
   def inspect

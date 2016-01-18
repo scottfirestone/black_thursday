@@ -2,14 +2,15 @@ require 'bigdecimal'
 require 'sales_engine'
 
 class Item
-  attr_reader :data, :id, :name, :description, :unit_price, :merchant_id
-  def initialize(data)
+  attr_reader :data, :id, :name, :description, :unit_price, :merchant_id, :item_repository
+  def initialize(data, item_repository)
     @data = data
     @id = data[:id].to_i
     @name = data[:name]
     @description = data[:description]
     @unit_price = BigDecimal.new(data[:unit_price])
     @merchant_id = data[:merchant_id].to_i
+    @item_repository = item_repository
   end
 
   def created_at
@@ -21,8 +22,7 @@ class Item
   end
 
   def merchant
-    mr = SalesEngine.merchants
-    mr.find_by_id(merchant_id)
+    item_repository.find_merchant_by_merchant_id(merchant_id)
   end
 
   def unit_price_to_dollars

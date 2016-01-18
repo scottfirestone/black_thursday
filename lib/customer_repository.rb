@@ -2,10 +2,11 @@ require_relative 'customer'
 require 'csv'
 
 class CustomerRepository
-  attr_reader :customers
+  attr_reader :customers, :sales_engine
 
-  def initialize(customers_csv)
+  def initialize(customers_csv, sales_engine)
     @customers ||= load_data(customers_csv)
+    @sales_engine = sales_engine
   end
 
   def load_data(customers)
@@ -15,7 +16,8 @@ class CustomerRepository
                     :first_name => row[:first_name],
                     :last_name  => row[:last_name],
                     :created_at => row[:created_at],
-                    :updated_at => row[:updated_at]})
+                    :updated_at => row[:updated_at]},
+                    self)
     end
   end
 
@@ -39,6 +41,14 @@ class CustomerRepository
     customers.select do |customer|
       customer.last_name.downcase.include?(last_name.downcase)
     end
+  end
+
+  def find_all_invoices_by_customer_id(customer_id)
+    sales_engine.find_all_invoices_by_customer_id(customer_id)
+  end
+
+  def find_merchant_by_merchant_id(merchant_id)
+    sales_engine.find_merchant_by_merchant_id(merchant_id)
   end
 
   def inspect

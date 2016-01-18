@@ -1,16 +1,14 @@
-require 'sales_engine'
-
 class Merchant
-  attr_reader :name, :id
+  attr_reader :name, :id, :merchant_repository
 
-  def initialize(merchant_data)
+  def initialize(merchant_data, merchant_repository)
     @name = merchant_data[:name]
     @id   = merchant_data[:id].to_i
+    @merchant_repository = merchant_repository
   end
 
   def items
-    ir = SalesEngine.items
-    ir.find_all_by_merchant_id(id)
+    merchant_repository.items(id)
   end
 
   def item_count
@@ -23,7 +21,13 @@ class Merchant
   end
 
   def invoices
-    inv_repo = SalesEngine.invoices
-    inv_repo.find_all_by_merchant_id(id)
+    merchant_repository.invoices(id)
+  end
+
+  def customers
+    customer_ids = invoices.map(&:customer_id) #.uniq
+    customer_ids.map do |customer_id|
+      merchant_repository.find_customer_by_customer_id(customer_id)
+    end
   end
 end

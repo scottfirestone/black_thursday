@@ -2,10 +2,11 @@ require_relative 'invoice_item'
 require 'csv'
 
 class InvoiceItemRepository
-  attr_reader :invoice_items
+  attr_reader :invoice_items #, :sales_engine
 
-  def initialize(invoice_items_csv)
+  def initialize(invoice_items_csv) #, sales_engine)
     @invoice_items ||= load_data(invoice_items_csv)
+    # @sales_engine = sales_engine
   end
 
   def load_data(invoice_items)

@@ -2,10 +2,11 @@ require_relative 'invoice'
 require 'csv'
 
 class InvoiceRepository
-  attr_reader :invoices
+  attr_reader :invoices, :sales_engine
 
-  def initialize(invoices_csv)
+  def initialize(invoices_csv, sales_engine)
     @invoices ||= load_data(invoices_csv)
+    @sales_engine = sales_engine
   end
 
   def load_data(invoices)
@@ -16,7 +17,9 @@ class InvoiceRepository
                     :merchant_id => row[:merchant_id],
                     :status      => row[:status],
                     :created_at  => row[:created_at],
-                    :updated_at  => row[:updated_at]})
+                    :updated_at  => row[:updated_at]},
+                    self)
+
     end
   end
 
@@ -46,6 +49,26 @@ class InvoiceRepository
     invoices.select do |invoice|
       invoice.status == status
     end
+  end
+
+  def find_merchant_by_merchant_id(merchant_id)
+    sales_engine.find_merchant_by_merchant_id(merchant_id)
+  end
+
+  def find_invoice_items_by_invoice_id(invoice_id)
+    sales_engine.find_invoice_items_by_invoice_id(invoice_id)
+  end
+
+  def find_items_by_item_id(item_id)
+    sales_engine.find_items_by_item_id(item_id)
+  end
+
+  def find_all_transactions_by_invoice_id(invoice_id)
+    sales_engine.find_all_transactions_by_invoice_id(invoice_id)
+  end
+
+  def find_customer_by_customer_id(customer_id)
+    sales_engine.find_customer_by_customer_id(customer_id)
   end
 
   def inspect

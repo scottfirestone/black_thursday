@@ -2,33 +2,34 @@ require 'test_helper'
 require 'customer_repository'
 
 class CustomerRepositoryTest < Minitest::Test
-  attr_reader :customers_data
+  attr_reader :customers_data, :sales_engine
 
   def setup
     @customers_data = "test_customers.csv"
+    @sales_engine = mock()
   end
 
   def test_customer_repository_instance
-    cr = CustomerRepository.new(customers_data)
+    cr = CustomerRepository.new(customers_data, sales_engine)
     assert cr
   end
 
   def test_load_data_gives_array
-    cr = CustomerRepository.new(customers_data)
+    cr = CustomerRepository.new(customers_data, sales_engine)
     expected = Array
     actual = cr.customers.class
     assert_equal expected, actual
   end
 
   def test_all_method_returns_array_of_customer_instances
-    cr = CustomerRepository.new(customers_data)
+    cr = CustomerRepository.new(customers_data, sales_engine)
     actual = cr.all.sample.class
     expected = Customer
     assert_equal expected, actual
   end
 
   def test_all_method_returns_all_customer_instances
-    cr = CustomerRepository.new(customers_data)
+    cr = CustomerRepository.new(customers_data, sales_engine)
     csv = CSV.open("test_customers.csv", headers:true, header_converters: :symbol)
     count = 0
     csv.each { |line| count +=1 }
@@ -41,7 +42,7 @@ class CustomerRepositoryTest < Minitest::Test
   end
 
   def test_find_by_id_method_returns_customer_instance
-    cr = CustomerRepository.new(customers_data)
+    cr = CustomerRepository.new(customers_data, sales_engine)
     found_customer = cr.find_by_id(6)
 
     assert_equal Customer, found_customer.class
@@ -52,12 +53,12 @@ class CustomerRepositoryTest < Minitest::Test
   end
 
   def test_find_by_id_method_returns_nil_if_no_match
-    cr = CustomerRepository.new(customers_data)
+    cr = CustomerRepository.new(customers_data, sales_engine)
     assert_equal nil, cr.find_by_id(123454)
   end
 
   def test_find_all_by_first_name_method_returns_all_customer_instances
-    cr = CustomerRepository.new(customers_data)
+    cr = CustomerRepository.new(customers_data, sales_engine)
     found_customers = cr.find_all_by_first_name("Heber")
 
     assert_equal Array, found_customers.class
@@ -71,12 +72,12 @@ class CustomerRepositoryTest < Minitest::Test
   end
 
   def test_find_all_by_first_name_method_returns_empty_array_if_no_match
-    cr = CustomerRepository.new(customers_data)
+    cr = CustomerRepository.new(customers_data, sales_engine)
     assert_equal [], cr.find_all_by_first_name("Centower")
   end
 
   def test_find_all_by_last_name_method_returns_all_matching_instances
-    cr = CustomerRepository.new(customers_data)
+    cr = CustomerRepository.new(customers_data, sales_engine)
     found_last_names = cr.find_all_by_last_name("Kuhn").map { |customer| customer.last_name }
 
     assert found_last_names.include?("Kuhn")

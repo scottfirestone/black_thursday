@@ -1,12 +1,15 @@
-class Invoice
-  attr_reader :data, :id, :customer_id, :merchant_id, :status
+require_relative 'sales_engine'
 
-  def initialize(data)
-    @data         = data
-    @id           = data[:id].to_i
-    @customer_id  = data[:customer_id].to_i
-    @merchant_id  = data[:merchant_id].to_i
-    @status       = data[:status].to_sym
+class Invoice
+  attr_reader :data, :id, :customer_id, :merchant_id, :status, :invoice_repository
+
+  def initialize(data, invoice_repository)
+    @data               = data
+    @id                 = data[:id].to_i
+    @customer_id        = data[:customer_id].to_i
+    @merchant_id        = data[:merchant_id].to_i
+    @status             = data[:status].to_sym
+    @invoice_repository = invoice_repository
   end
 
   def created_at
@@ -18,7 +21,27 @@ class Invoice
   end
 
   def merchant
-    merch_repo = SalesEngine.merchants
-    merch_repo.find_by_id(merchant_id)
+    # merch_repo = SalesEngine.merchants
+    invoice_repository.find_merchant_by_merchant_id(merchant_id)
+    # merch_repo.find_by_id(merchant_id)
+  end
+
+  def items
+    invoice_items = invoice_repository.find_invoice_items_by_invoice_id(id)
+
+    item_id_array = invoice_items.map(&:item_id)
+
+    item_id_array.map do |item_id|
+      invoice_repository.find_items_by_item_id(item_id)
+    end
+
+  end
+
+  def transactions
+    invoice_repository.find_all_transactions_by_invoice_id(id)
+  end
+
+  def customer
+    invoice_repository.find_customer_by_customer_id(customer_id)
   end
 end
