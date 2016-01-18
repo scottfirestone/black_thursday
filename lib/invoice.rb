@@ -44,4 +44,11 @@ class Invoice
   def customer
     invoice_repository.find_customer_by_customer_id(customer_id)
   end
+
+  def is_paid_in_full?
+    transactions = invoice_repository.find_all_transactions_by_invoice_id(id)
+    transactions.all? do |transaction|
+      transaction.result == "success"
+    end
+  end
 end

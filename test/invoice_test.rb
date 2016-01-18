@@ -1,6 +1,7 @@
 require 'test_helper'
 require 'invoice'
-
+require 'invoice_repository'
+require 'pry'
 class InvoiceTest < Minitest::Test
   attr_reader :invoice_data, :invoice_repository
 
@@ -95,5 +96,11 @@ class InvoiceTest < Minitest::Test
     assert_equal 8, invoice.items.size
     assert_equal Item, invoice.items.sample.class
     assert_equal 1, invoice.items.sample.id
+  end
+
+  def test_it_is_paid_in_full
+    skip
+    invoice = Invoice.new(invoice_data, invoice_repository)
+    assert_equal true, invoice.is_paid_in_full?
   end
 end
