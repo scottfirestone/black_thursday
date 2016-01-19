@@ -47,13 +47,13 @@ class ItemRepository
 
   def find_all_by_price(price)
     items.select do |item|
-      item.unit_price_to_dollars == BigDecimal.new(price.to_s)
+      item.unit_price == BigDecimal.new(price.to_s)
     end
   end
 
   def find_all_by_price_in_range(range)
     items.select do |item|
-      range.include?(item.unit_price_to_dollars)
+      range.include?(item.unit_price)
     end
   end
 

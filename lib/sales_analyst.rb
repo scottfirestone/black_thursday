@@ -97,7 +97,7 @@ class SalesAnalyst
     #then we want to iterate over it
     #return value should be sorted array
   end
-  
+
   def invoice_counts
     merch_repo.all.map { |merchant| merchant.invoices.count }
   end
@@ -105,7 +105,7 @@ class SalesAnalyst
   def sales_per_day
     day_counts = Hash.new(0)
     extract_invoice_days.each do |day|
-      day_counts[day.to_sym] += 1
+      day_counts[day] += 1
     end
     day_counts
   end

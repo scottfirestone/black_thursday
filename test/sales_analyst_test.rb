@@ -120,7 +120,7 @@ class SalesAnalystTest < Minitest::Test
     expected = ["Saturday", "Friday", "Wednesday", "Monday", "Saturday", "Friday", "Monday", "Friday", "Friday", "Sunday", "Tuesday", "Monday", "Monday", "Wednesday", "Friday"]
     assert_equal expected, invoice_days
 
-    assert_equal [:Friday], sa.top_days_by_invoice_count
+    assert_equal ["Friday"], sa.top_days_by_invoice_count
   end
 
   def test_invoice_status_returns_percentage_with_matching_status

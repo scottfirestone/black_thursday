@@ -59,4 +59,8 @@ class CustomerTest < Minitest::Test
     customer.data[:updated_at] = nil
     assert_equal nil, customer.updated_at
   end
+
+  def test_merchants_returns_customers_merchants
+
+  end
 end

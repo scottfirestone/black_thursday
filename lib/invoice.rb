@@ -21,9 +21,7 @@ class Invoice
   end
 
   def merchant
-    # merch_repo = SalesEngine.merchants
     invoice_repository.find_merchant_by_merchant_id(merchant_id)
-    # merch_repo.find_by_id(merchant_id)
   end
 
   def items
@@ -32,7 +30,7 @@ class Invoice
     item_id_array = invoice_items.map(&:item_id)
 
     item_id_array.map do |item_id|
-      invoice_repository.find_items_by_item_id(item_id)
+      invoice_repository.find_item_by_item_id(item_id)
     end
 
   end
@@ -49,6 +47,17 @@ class Invoice
     transactions = invoice_repository.find_all_transactions_by_invoice_id(id)
     transactions.all? do |transaction|
       transaction.result == "success"
+    end
+  end
+
+  def total
+    if is_paid_in_full?
+      invoice_items = invoice_repository.find_invoice_items_by_invoice_id(id)
+      invoice_items.reduce(0) do |sum, invoice_item|
+        (sum + invoice_item.unit_price)
+      end / 100
+    else
+      "Invoice has not been paid in full."
     end
   end
 end
