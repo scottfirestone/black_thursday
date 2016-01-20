@@ -33,11 +33,11 @@ require 'invoice_item_repository'
      count = 0
      csv.each { |line| count +=1 }
 
-     assert_equal 532, count
+     assert_equal 533, count
 
      all_invoice_items = inv_item_repo.all
 
-     assert_equal 532, all_invoice_items.length
+     assert_equal 533, all_invoice_items.length
    end
 
    def test_find_by_id_method_returns_item_instance

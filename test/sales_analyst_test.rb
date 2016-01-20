@@ -57,12 +57,11 @@ class SalesAnalystTest < Minitest::Test
   end
 
   def test_golden_items
-    se = SalesEngine.from_csv({:items => "sa_test_items.csv", :merchants => "sa_test_merchants.csv", :invoices => "test_invoices.csv", :invoice_items => "test_invoice_items.csv", :transactions => "test_transactions.csv", :customers => "test_customers.csv"})
     sa = SalesAnalyst.new(se)
     our_info = sa.item_repo.all.map do |item|
       item.unit_price
     end
-    assert_equal [], sa.golden_items
+    assert_equal 1, sa.golden_items.count
   end
 
   def test_average_invoices_per_merchant
@@ -109,6 +108,6 @@ class SalesAnalystTest < Minitest::Test
   end
 
   def test_total_revenue_by_date
-    assert_equal 54540, sa.total_revenue_by_date("2014-02-13")
+    assert_equal 3018.40, sa.total_revenue_by_date(Time.parse("2011-05-09"))
   end
 end

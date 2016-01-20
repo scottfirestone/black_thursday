@@ -2,11 +2,10 @@ require_relative 'invoice_item'
 require 'csv'
 
 class InvoiceItemRepository
-  attr_reader :invoice_items #, :sales_engine
+  attr_reader :invoice_items
 
-  def initialize(invoice_items_csv) #, sales_engine)
+  def initialize(invoice_items_csv)
     @invoice_items ||= load_data(invoice_items_csv)
-    # @sales_engine = sales_engine
   end
 
   def load_data(invoice_items)
@@ -41,12 +40,6 @@ class InvoiceItemRepository
   def find_all_by_invoice_id(invoice_id)
     invoice_items.select do |invoice_item|
       invoice_item.invoice_id == invoice_id
-    end
-  end
-
-  def find_all_by_date(date)
-    invoice_items.select do |invoice_item|
-      invoice_item.created_at == Time.parse(date)
     end
   end
 

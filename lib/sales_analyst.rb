@@ -24,7 +24,6 @@ class SalesAnalyst
   def merchants_with_high_item_count
     mean = average_items_per_merchant
     std_dev = average_items_per_merchant_standard_deviation
-
     merch_repo.all.select do |merchant|
       merchant.item_count > (mean + std_dev)
     end
@@ -43,12 +42,10 @@ class SalesAnalyst
   end
 
   def golden_items
-    item_prices = item_repo.all.map do |item|
-      item.unit_price
-    end
-    average_item_price = item_prices.reduce(0, :+) / item_repo.all.length
+    item_prices = item_repo.all.map { |item| item.unit_price }
+    average_item_price = average_price_of_all_items_in_repo(item_prices)
     item_repo.all.select do |item|
-      item.unit_price > (average_item_price + (2 * (standard_deviation(item_prices))))
+      select_items_with_price_2_std_above_avg(item, item_prices, average_item_price)
     end
   end
 
@@ -92,12 +89,24 @@ class SalesAnalyst
   end
 
   def total_revenue_by_date(date)
-    invoice_items = invoice_item_repo.find_all_by_date(date)
-    invoice_items.reduce(0) do |sum, invoice_item|
-      sum + (invoice_item.unit_price * invoice_item.quantity)
+    invoices = invoice_repo.find_all_invoices_by_date(date)
+    invoices.reduce(0) do |sum, invoice|
+      if invoice.is_paid_in_full?
+        sum + invoice.total
+      else
+        sum + 0
+      end
+      # invoice.is_paid_in_full? ? sum + invoice.total : sum + 0
     end
+    # .map(&:id)
+    # invoice_items = invoice_ids.map do |invoice_id|
+    #   invoice_item_repo.find_all_by_invoice_id(invoice_id)
+    # end.flatten
+    # invoice_items.reduce(0) do |sum, invoice_item|
+    #   sum + (invoice_item.unit_price * invoice_item.quantity)
+    # end
 
-    end
+  end
 
   private
 
@@ -107,9 +116,7 @@ class SalesAnalyst
 
   def sales_per_day
     day_counts = Hash.new(0)
-    extract_invoice_days.each do |day|
-      day_counts[day] += 1
-    end
+    extract_invoice_days.each { |day| day_counts[day] += 1 }
     day_counts
   end
 
@@ -138,4 +145,11 @@ class SalesAnalyst
     array.inject(0, :+) / array.length.to_f
   end
 
+  def average_price_of_all_items_in_repo(item_prices)
+    item_prices.reduce(0, :+) / item_repo.all.length
+  end
+
+  def select_items_with_price_2_std_above_avg(item, item_prices, average_item_price)
+    item.unit_price > (average_item_price + (2 * (standard_deviation(item_prices))))
+  end
 end

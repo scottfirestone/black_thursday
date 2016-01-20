@@ -8,7 +8,7 @@ class Merchant
   end
 
   def items
-    merchant_repository.items(id)
+    @items ||= merchant_repository.items(id)
   end
 
   def item_count
@@ -21,12 +21,12 @@ class Merchant
   end
 
   def invoices
-    merchant_repository.invoices(id)
+    @invoices ||= merchant_repository.invoices(id)
   end
 
   def customers
     customer_ids = invoices.map(&:customer_id).uniq
-    customer_ids.map do |customer_id|
+    @customers ||= customer_ids.map do |customer_id|
       merchant_repository.find_customer_by_customer_id(customer_id)
     end
   end

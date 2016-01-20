@@ -51,13 +51,9 @@ class Invoice
   end
 
   def total
-    if is_paid_in_full?
-      invoice_items = invoice_repository.find_invoice_items_by_invoice_id(id)
-      invoice_items.reduce(0) do |sum, invoice_item|
-        sum += (invoice_item.unit_price * invoice_item.quantity)
-      end / 100
-    else
-      "Invoice has not been paid in full."
-    end
+    invoice_items = invoice_repository.find_invoice_items_by_invoice_id(id)
+    invoice_items.reduce(0) do |sum, invoice_item|
+      sum += (invoice_item.unit_price * invoice_item.quantity)
+    end / 100
   end
 end

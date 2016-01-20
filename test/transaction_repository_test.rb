@@ -26,11 +26,11 @@ class TransactionRepositoryTest < Minitest::Test
     count = 0
     csv.each { |line| count +=1 }
 
-    assert_equal 100, count
+    assert_equal 101, count
 
     all_transactions = trans_repo.all
 
-    assert_equal 100, all_transactions.length
+    assert_equal 101, all_transactions.length
   end
 
   def test_find_by_id_method_returns_transaction_instance
@@ -75,7 +75,7 @@ class TransactionRepositoryTest < Minitest::Test
   def test_find_all_by_result_returns_array_of_transactions_with_matching_status
     trans_repo = TransactionRepository.new("test_transactions.csv", sales_engine)
     transaction_statuses = trans_repo.find_all_by_result("success").map { |transaction| transaction.result }
-    assert_equal 78, transaction_statuses.size
+    assert_equal 79, transaction_statuses.size
 
     result_matches = transaction_statuses.all? { |result| result == "success" }
     assert result_matches

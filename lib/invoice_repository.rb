@@ -71,6 +71,12 @@ class InvoiceRepository
     sales_engine.find_customer_by_customer_id(customer_id)
   end
 
+  def find_all_invoices_by_date(date)
+    invoices.select do |invoice|
+      invoice.updated_at == date
+    end
+  end
+
   def inspect
     "#<#{self.class} #{@invoices.size} rows>"
   end
