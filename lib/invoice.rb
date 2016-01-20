@@ -32,7 +32,6 @@ class Invoice
     item_id_array.map do |item_id|
       invoice_repository.find_item_by_item_id(item_id)
     end
-
   end
 
   def transactions
@@ -50,8 +49,11 @@ class Invoice
     end
   end
 
+  def invoice_items
+    @invoice_items ||= invoice_repository.find_invoice_items_by_invoice_id(id)
+  end
+
   def total
-    invoice_items = invoice_repository.find_invoice_items_by_invoice_id(id)
     invoice_items.reduce(0) do |sum, invoice_item|
       sum += (invoice_item.unit_price * invoice_item.quantity)
     end / 100

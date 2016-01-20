@@ -110,4 +110,35 @@ class SalesAnalystTest < Minitest::Test
   def test_total_revenue_by_date
     assert_equal 3018.40, sa.total_revenue_by_date(Time.parse("2011-05-09"))
   end
+
+  def test_find_top_x_performing_merchants_in_terms_of_revenue
+    assert_equal Array, sa.top_revenue_earners(3).class
+    assert_equal Merchant, sa.top_revenue_earners(3).sample.class
+    assert_equal 3, sa.top_revenue_earners(3).size
+  end
+
+  def test_merchants_with_pending_invoices
+    se = SalesEngine.from_csv({:items => "test_items.csv", :merchants => "test_merchants.csv", :invoices => "test_invoices.csv", :invoice_items => "test_invoice_items.csv", :transactions => "test_transactions.csv", :customers => "test_customers.csv"})
+
+    sa = SalesAnalyst.new(se)
+    expected = sa.merchants_with_pending_invoices - [nil]
+    assert_equal Merchant, expected.sample.class
+    assert_equal 5, expected.length
+  end
+
+  def test_merchants_with_only_one_item
+    assert_equal Merchant, sa.merchants_with_only_one_item.sample.class
+    assert_equal 4, sa.merchants_with_only_one_item.length
+  end
+
+  def test_merchants_with_only_one_item_registered_in_month
+    assert_equal Merchant, sa.merchants_with_only_one_item_registered_in_month("January").sample.class
+    assert_equal 4, sa.merchants_with_only_one_item_registered_in_month("January").length
+  end
+
+  def test_revenue_by_merchant
+    skip
+    assert_equal 8, sa.revenue_by_merchant("12334123")
+  end
+
 end

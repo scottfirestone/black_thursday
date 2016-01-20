@@ -96,16 +96,34 @@ class SalesAnalyst
       else
         sum + 0
       end
-      # invoice.is_paid_in_full? ? sum + invoice.total : sum + 0
     end
-    # .map(&:id)
-    # invoice_items = invoice_ids.map do |invoice_id|
-    #   invoice_item_repo.find_all_by_invoice_id(invoice_id)
-    # end.flatten
-    # invoice_items.reduce(0) do |sum, invoice_item|
-    #   sum + (invoice_item.unit_price * invoice_item.quantity)
-    # end
+  end
 
+  def top_revenue_earners(n_merchants = 20)
+    merch_repo.all.sort_by { |merchant| merchant.revenue }.reverse[0..(n_merchants-1)]
+  end
+
+  def merchants_with_pending_invoices
+    pending_invoices = invoice_repo.find_all_by_status(:pending)
+    pending_invoices.map do |invoice|
+      invoice.merchant
+    end.uniq
+  end
+
+  def merchants_with_only_one_item
+    merch_repo.all.select do |merchant|
+      merchant.items.length == 1
+    end
+  end
+
+  def merchants_with_only_one_item_registered_in_month(reg_month)
+    merchants_with_only_one_item.select do |merchant|
+      merchant.created_at.month == Time.parse(reg_month).month
+    end
+  end
+
+  def revenue_by_merchant(merchant_id)
+    merch_repo.find_by_id(merchant_id).revenue
   end
 
   private

@@ -12,7 +12,7 @@ class MerchantRepository
   def load_data(merchants)
     csv = CSV.open(merchants, headers: true, header_converters: :symbol)
     @merchants = csv.map do |row|
-      Merchant.new({:name => row[:name], :id => row[:id]}, self)
+      Merchant.new({:name => row[:name], :id => row[:id], :created_at => row[:created_at]}, self)
     end
   end
 
