@@ -2,12 +2,13 @@ require_relative 'sales_engine'
 require 'bigdecimal'
 require 'pry'
 class SalesAnalyst
-  attr_reader :merch_repo, :item_repo, :invoice_repo
+  attr_reader :merch_repo, :item_repo, :invoice_repo, :invoice_item_repo
 
   def initialize(sales_engine)
-    @merch_repo   = sales_engine.merchants
-    @item_repo    = sales_engine.items
-    @invoice_repo = sales_engine.invoices
+    @merch_repo        = sales_engine.merchants
+    @item_repo         = sales_engine.items
+    @invoice_repo      = sales_engine.invoices
+    @invoice_item_repo = sales_engine.invoice_items
   end
 
   def average_items_per_merchant
@@ -90,13 +91,15 @@ class SalesAnalyst
     ((matching_status_invoices.count.to_f / invoice_repo.all.count) * 100).round(2)
   end
 
-  private
+  def total_revenue_by_date(date)
+    invoice_items = invoice_item_repo.find_all_by_date(date)
+    invoice_items.reduce(0) do |sum, invoice_item|
+      sum + (invoice_item.unit_price * invoice_item.quantity)
+    end
 
-  def group_by_top_score
-    #here we want to take in the various scores
-    #then we want to iterate over it
-    #return value should be sorted array
-  end
+    end
+
+  private
 
   def invoice_counts
     merch_repo.all.map { |merchant| merchant.invoices.count }

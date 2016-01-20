@@ -44,6 +44,12 @@ class InvoiceItemRepository
     end
   end
 
+  def find_all_by_date(date)
+    invoice_items.select do |invoice_item|
+      invoice_item.created_at == Time.parse(date)
+    end
+  end
+
   def inspect
     "#<#{self.class} #{@invoice_items.size} rows>"
   end

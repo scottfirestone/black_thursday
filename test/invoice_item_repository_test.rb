@@ -33,11 +33,11 @@ require 'invoice_item_repository'
      count = 0
      csv.each { |line| count +=1 }
 
-     assert_equal 500, count
+     assert_equal 532, count
 
      all_invoice_items = inv_item_repo.all
 
-     assert_equal 500, all_invoice_items.length
+     assert_equal 532, all_invoice_items.length
    end
 
    def test_find_by_id_method_returns_item_instance
@@ -57,7 +57,7 @@ require 'invoice_item_repository'
      inv_item_repo = InvoiceItemRepository.new(invoice_items_data)
      found_item_ids = inv_item_repo.find_all_by_item_id(263519844).map { |invoice_item| invoice_item.item_id }
 
-     assert_equal 2, found_item_ids.size
+     assert_equal 34, found_item_ids.size
 
      item_ids_match = found_item_ids.all? { |id| id == 263519844 }
      assert item_ids_match
