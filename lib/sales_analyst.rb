@@ -150,6 +150,26 @@ class SalesAnalyst
     end
   end
 
+  def best_item_for_merchant(merchant_id)
+    #find all paid invoices for given merchant
+    invoices = merch_repo.find_by_id(merchant_id).invoices.select(&:is_paid_in_full?)
+    invoice_items = invoices.map(&:invoice_items).flatten
+    item_ids = invoice_items.map(&:item_id)
+    totals = invoice_items.map do |invoice_item|
+      invoice_item.quantity * invoice_item.unit_price
+    end
+
+    best_item = item_ids.zip(totals).sort_by do |pair|
+      pair.last
+    end.last.first
+    # # top_item_quantity = zipped_sorted.last.last
+    # top_items = zipped_sorted.select { |element| element.last == top_item_quantity}
+    # top_items.map do |pair|
+      item_repo.find_by_id(best_item)
+    # end
+
+  end
+
   private
 
   def invoice_counts

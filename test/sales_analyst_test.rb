@@ -124,7 +124,7 @@ class SalesAnalystTest < Minitest::Test
     sa = SalesAnalyst.new(se)
     expected = sa.merchants_with_pending_invoices - [nil]
     assert_equal Merchant, expected.sample.class
-    assert_equal 5, expected.length
+    assert_equal 6, expected.length
   end
 
   def test_merchants_with_only_one_item
@@ -142,6 +142,6 @@ class SalesAnalystTest < Minitest::Test
     assert_equal 8, sa.revenue_by_merchant("12334123")
   end
 
-  
+
 
 end
