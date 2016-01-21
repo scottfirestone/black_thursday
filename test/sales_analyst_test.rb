@@ -107,11 +107,6 @@ class SalesAnalystTest < Minitest::Test
     assert_equal 6.67, sa.invoice_status(:returned)
   end
 
-  def test_total_revenue_by_date
-    skip
-    assert_equal 3018.40, sa.total_revenue_by_date(Time.parse("2011-05-09"))
-  end
-
   def test_find_top_x_performing_merchants_in_terms_of_revenue
     assert_equal Array, sa.top_revenue_earners(3).class
     assert_equal Merchant, sa.top_revenue_earners(3).sample.class
@@ -136,12 +131,4 @@ class SalesAnalystTest < Minitest::Test
     assert_equal Merchant, sa.merchants_with_only_one_item_registered_in_month("January").sample.class
     assert_equal 4, sa.merchants_with_only_one_item_registered_in_month("January").length
   end
-
-  def test_revenue_by_merchant
-    skip
-    assert_equal 8, sa.revenue_by_merchant("12334123")
-  end
-
-
-
 end

@@ -78,28 +78,4 @@ class InvoiceTest < Minitest::Test
     invoice = se.invoices.find_by_id(175)
     assert_equal Merchant, invoice.merchant.class
   end
-
-  def test_items_method_returns_array_of_items_with_matching_id
-    skip
-    se = SalesEngine.from_csv({
-      :items     => "./test_items.csv",
-      :merchants => "./test_merchants.csv",
-      :invoices  => "./test_invoices.csv",
-      :invoice_items => "./test_invoice_items.csv",
-      :transactions => "./test_transactions.csv",
-      :customers => "./test_customers.csv"
-      })
-    invoice = se.invoices.find_by_id(1)
-
-    assert_equal Array, invoice.items.class
-    assert_equal 8, invoice.items.size
-    assert_equal Item, invoice.items.sample.class
-    assert_equal 1, invoice.items.sample.id
-  end
-
-  def test_it_is_paid_in_full
-    skip
-    invoice = Invoice.new(invoice_data, invoice_repository)
-    assert_equal true, invoice.is_paid_in_full?
-  end
 end
