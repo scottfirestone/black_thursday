@@ -24,4 +24,8 @@ class InvoiceItem
   def unit_price_to_dollars
     (unit_price / 100).to_f
   end
+
+  def total_invoice_item_price
+    quantity * unit_price
+  end
 end

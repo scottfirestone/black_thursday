@@ -55,7 +55,7 @@ class Invoice
 
   def total
     invoice_items.reduce(0) do |sum, invoice_item|
-      sum += (invoice_item.unit_price * invoice_item.quantity)
+      sum + invoice_item.total_invoice_item_price
     end / 100
   end
 end

@@ -1,6 +1,6 @@
 require_relative 'sales_engine'
 require 'bigdecimal'
-require 'pry'
+
 class SalesAnalyst
   attr_reader :merch_repo, :item_repo, :invoice_repo, :invoice_item_repo
 
@@ -12,12 +12,12 @@ class SalesAnalyst
   end
 
   def average_items_per_merchant
-    items_count = merch_repo.all.map{|m|m.item_count}
+    items_count = merch_repo.all.map { |merchant| merchant.item_count}
     mean(items_count).round(2)
   end
 
   def average_items_per_merchant_standard_deviation
-    items_count = merch_repo.all.map { |m| m.item_count }
+    items_count = merch_repo.all.map { |merchant| merchant.item_count }
     standard_deviation(items_count).round(2)
   end
 
@@ -30,8 +30,7 @@ class SalesAnalyst
   end
 
   def average_item_price_for_merchant(merchant_id)
-    merchant = merch_repo.find_by_id(merchant_id)
-    merchant.average_item_price
+    merch_repo.find_by_id(merchant_id).average_item_price
   end
 
   def average_average_price_per_merchant
@@ -82,17 +81,12 @@ class SalesAnalyst
   end
 
   def invoice_status(status)
-    matching_status_invoices = invoice_repo.all.select do |invoice|
-      invoice.status == status
-    end
-    ((matching_status_invoices.count.to_f / invoice_repo.all.count) * 100).round(2)
+    ((matching_status_invoices_count(status) / invoice_repo.all.count) * 100).round(2)
   end
 
   def total_revenue_by_date(date)
-    invoices = invoice_repo.find_all_invoices_by_date(date)
-    paid_invoices = invoices.select { |invoice| invoice.is_paid_in_full? }
-    paid_invoices.map(&:invoice_items).flatten.reduce(0) do |sum, invoice_item|
-      sum + (invoice_item.quantity * invoice_item.unit_price)
+    paid_invoices_by_date(date).map(&:invoice_items).flatten.reduce(0) do |sum, invoice_item|
+      sum + invoice_item.total_invoice_item_price
     end / 100
   end
 
@@ -106,23 +100,14 @@ class SalesAnalyst
     end.sort_by { |merchant| merchant.revenue }.reverse
   end
 
-  # def merchants_with_pending_invoices
-  #   pending_invoices = invoice_repo.find_all_by_status(:pending)
-  #   pending_invoices.map do |invoice|
-  #     invoice.merchant
-  #   end.uniq
-  # end
-
   def merchants_with_pending_invoices
-    merch_repo.all.select do |merchant|
-      merchant.invoices.any? { |invoice| !invoice.is_paid_in_full? }
+    merch_repo.all.reject do |merchant|
+      merchant.invoices.all? { |invoice| invoice.is_paid_in_full? }
     end
   end
 
   def merchants_with_only_one_item
-    merch_repo.all.select do |merchant|
-      merchant.items.length == 1
-    end
+    merch_repo.all.select { |merchant| merchant.items.length == 1 }
   end
 
   def merchants_with_only_one_item_registered_in_month(reg_month)
@@ -136,41 +121,52 @@ class SalesAnalyst
   end
 
   def most_sold_item_for_merchant(merchant_id)
-    invoices = merch_repo.find_by_id(merchant_id).invoices.select(&:is_paid_in_full?)
-    invoice_items = invoices.map(&:invoice_items).flatten
-    item_ids = invoice_items.map(&:item_id)
-    quantities = invoice_items.map(&:quantity)
-    zipped_sorted = item_ids.zip(quantities).sort_by do |pair|
-      pair.last
-    end
-    top_item_quantity = zipped_sorted.last.last
-    top_items = zipped_sorted.select { |element| element.last == top_item_quantity}
-    top_items.map do |pair|
-      item_repo.find_by_id(pair.first)
+    top_items_by_merchant(merchant_id).map do |item_id_by_quant|
+      item_repo.find_by_id(item_id_by_quant.first)
     end
   end
 
   def best_item_for_merchant(merchant_id)
-    #find all paid invoices for given merchant
-    invoices = merch_repo.find_by_id(merchant_id).invoices.select(&:is_paid_in_full?)
-    invoice_items = invoices.map(&:invoice_items).flatten
-    item_ids = invoice_items.map(&:item_id)
-    totals = invoice_items.map do |invoice_item|
-      invoice_item.quantity * invoice_item.unit_price
-    end
-
-    best_item = item_ids.zip(totals).sort_by do |pair|
-      pair.last
-    end.last.first
-    # # top_item_quantity = zipped_sorted.last.last
-    # top_items = zipped_sorted.select { |element| element.last == top_item_quantity}
-    # top_items.map do |pair|
-      item_repo.find_by_id(best_item)
-    # end
-
+    item_repo.find_by_id(best_item_id_for_merchant(merchant_id))
   end
 
   private
+
+  def best_item_id_for_merchant(merchant_id)
+    item_ids = invoice_items_paid_in_full(merchant_id).map(&:item_id)
+    totals = invoice_items_paid_in_full(merchant_id).map { |invoice_item| invoice_item.total_invoice_item_price }
+    item_ids.zip(totals).sort_by do |item_id_and_price|
+      item_id_and_price.last
+    end.last.first
+  end
+
+  def top_items_by_merchant(merchant_id)
+    item_ids_by_quantity(merchant_id).select do |item_quantity|
+       item_quantity.last == item_ids_by_quantity(merchant_id).last.last
+     end
+  end
+
+  def item_ids_by_quantity(merchant_id)
+    item_ids = invoice_items_paid_in_full(merchant_id).map(&:item_id)
+    quantities = invoice_items_paid_in_full(merchant_id).map(&:quantity)
+    item_ids_by_quantity = item_ids.zip(quantities).sort_by(&:last)
+  end
+
+  def invoice_items_paid_in_full(merchant_id)
+    invoices = merch_repo.find_by_id(merchant_id).invoices.select(&:is_paid_in_full?)
+    invoices.map(&:invoice_items).flatten
+  end
+
+  def paid_invoices_by_date(date)
+    invoices = invoice_repo.find_all_invoices_by_date(date)
+    paid_invoices = invoices.select { |invoice| invoice.is_paid_in_full? }
+  end
+
+  def matching_status_invoices_count(status)
+    matching_status_invoices = invoice_repo.all.select do |invoice|
+      invoice.status == status
+    end.count.to_f
+  end
 
   def invoice_counts
     merch_repo.all.map { |merchant| merchant.invoices.count }
