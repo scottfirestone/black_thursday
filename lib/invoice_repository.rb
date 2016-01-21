@@ -5,7 +5,7 @@ class InvoiceRepository
   attr_reader :invoices, :sales_engine
 
   def initialize(invoices_csv, sales_engine)
-    @invoices ||= load_data(invoices_csv)
+    @invoices   ||= load_data(invoices_csv)
     @sales_engine = sales_engine
   end
 

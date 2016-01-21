@@ -2,9 +2,9 @@ class Merchant
   attr_reader :name, :id, :merchant_repository, :merchant_data
 
   def initialize(merchant_data, merchant_repository)
-    @merchant_data = merchant_data
-    @name = merchant_data[:name]
-    @id   = merchant_data[:id].to_i
+    @merchant_data       = merchant_data
+    @name                = merchant_data[:name]
+    @id                  = merchant_data[:id].to_i
     @merchant_repository = merchant_repository
   end
 
@@ -30,19 +30,22 @@ class Merchant
   end
 
   def customers
-    customer_ids = invoices.map(&:customer_id).uniq
     @customers ||= customer_ids.map do |customer_id|
       merchant_repository.find_customer_by_customer_id(customer_id)
     end
   end
 
-  def revenue
-    paid_invoices = invoices.select do |invoice|
-      invoice.is_paid_in_full?
-    end
-    paid_invoice_items = paid_invoices.flat_map do |invoice|
+  def customer_ids
+    invoices.map(&:customer_id).uniq
+  end
+
+  def paid_invoice_items
+    invoices.select(&:is_paid_in_full?).flat_map do |invoice|
       invoice.invoice_items
     end
+  end
+
+  def revenue
     @revenue ||= paid_invoice_items.reduce(0) do |sum, invoice_item|
       sum + (invoice_item.quantity * invoice_item.unit_price)
     end

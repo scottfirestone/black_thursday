@@ -1,7 +1,6 @@
 require 'test_helper'
 require 'invoice'
-require 'invoice_repository'
-require 'pry'
+
 class InvoiceTest < Minitest::Test
   attr_reader :invoice_data, :invoice_repository
 

@@ -79,11 +79,3 @@ class SalesEngine
     invoices.find_all_by_customer_id(customer_id)
   end
 end
-
-if __FILE__ == $0
-  puts se = SalesEngine.new.from_csv({
-    :items     => "./data/items.csv",
-    :merchants => "./data/merchants.csv"
-  })
-  merchant = se.merchants.find_by_name("")
-end

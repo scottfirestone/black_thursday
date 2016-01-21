@@ -5,7 +5,7 @@ class ItemRepository
   attr_reader :items, :sales_engine
 
   def initialize(items_csv, sales_engine)
-    @items ||= load_data(items_csv)
+    @items      ||= load_data(items_csv)
     @sales_engine = sales_engine
   end
 

@@ -6,7 +6,7 @@ class TransactionRepository
 
   def initialize(transaction_csv, sales_engine)
     @transactions ||= load_data(transaction_csv)
-    @sales_engine = sales_engine
+    @sales_engine   = sales_engine
   end
 
   def load_data(transactions)

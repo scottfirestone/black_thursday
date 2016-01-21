@@ -5,14 +5,17 @@ class MerchantRepository
   attr_reader :merchants, :sales_engine
 
   def initialize(merchants_data, sales_engine)
-    @merchants ||= load_data(merchants_data)
+    @merchants  ||= load_data(merchants_data)
     @sales_engine = sales_engine
   end
 
   def load_data(merchants)
     csv = CSV.open(merchants, headers: true, header_converters: :symbol)
     @merchants = csv.map do |row|
-      Merchant.new({:name => row[:name], :id => row[:id], :created_at => row[:created_at]}, self)
+      Merchant.new({:name       => row[:name],
+                    :id         => row[:id],
+                    :created_at => row[:created_at]},
+                    self)
     end
   end
 

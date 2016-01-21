@@ -1,5 +1,3 @@
-require_relative 'sales_engine'
-
 class Invoice
   attr_reader :data, :id, :customer_id, :merchant_id, :status, :invoice_repository
 
@@ -25,11 +23,7 @@ class Invoice
   end
 
   def items
-    invoice_items = invoice_repository.find_invoice_items_by_invoice_id(id)
-
-    item_id_array = invoice_items.map(&:item_id)
-
-    item_id_array.map do |item_id|
+    invoice_items.map(&:item_id).map do |item_id|
       invoice_repository.find_item_by_item_id(item_id)
     end
   end
