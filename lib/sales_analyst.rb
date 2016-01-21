@@ -90,24 +90,33 @@ class SalesAnalyst
 
   def total_revenue_by_date(date)
     invoices = invoice_repo.find_all_invoices_by_date(date)
-    invoices.reduce(0) do |sum, invoice|
-      if invoice.is_paid_in_full?
-        sum + invoice.total
-      else
-        sum + 0
-      end
-    end
+    paid_invoices = invoices.select { |invoice| invoice.is_paid_in_full? }
+    paid_invoices.map(&:invoice_items).flatten.reduce(0) do |sum, invoice_item|
+      sum + (invoice_item.quantity * invoice_item.unit_price)
+    end / 100
   end
 
   def top_revenue_earners(n_merchants = 20)
     merch_repo.all.sort_by { |merchant| merchant.revenue }.reverse[0..(n_merchants-1)]
   end
 
+  def merchants_ranked_by_revenue
+    merch_repo.all.reject do |merchant|
+      merchant.revenue == 0
+    end.sort_by { |merchant| merchant.revenue }.reverse
+  end
+
+  # def merchants_with_pending_invoices
+  #   pending_invoices = invoice_repo.find_all_by_status(:pending)
+  #   pending_invoices.map do |invoice|
+  #     invoice.merchant
+  #   end.uniq
+  # end
+
   def merchants_with_pending_invoices
-    pending_invoices = invoice_repo.find_all_by_status(:pending)
-    pending_invoices.map do |invoice|
-      invoice.merchant
-    end.uniq
+    merch_repo.all.select do |merchant|
+      merchant.invoices.any? { |invoice| !invoice.is_paid_in_full? }
+    end
   end
 
   def merchants_with_only_one_item
@@ -124,6 +133,21 @@ class SalesAnalyst
 
   def revenue_by_merchant(merchant_id)
     merch_repo.find_by_id(merchant_id).revenue
+  end
+
+  def most_sold_item_for_merchant(merchant_id)
+    invoices = merch_repo.find_by_id(merchant_id).invoices.select(&:is_paid_in_full?)
+    invoice_items = invoices.map(&:invoice_items).flatten
+    item_ids = invoice_items.map(&:item_id)
+    quantities = invoice_items.map(&:quantity)
+    zipped_sorted = item_ids.zip(quantities).sort_by do |pair|
+      pair.last
+    end
+    top_item_quantity = zipped_sorted.last.last
+    top_items = zipped_sorted.select { |element| element.last == top_item_quantity}
+    top_items.map do |pair|
+      item_repo.find_by_id(pair.first)
+    end
   end
 
   private

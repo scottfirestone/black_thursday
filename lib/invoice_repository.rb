@@ -73,7 +73,7 @@ class InvoiceRepository
 
   def find_all_invoices_by_date(date)
     invoices.select do |invoice|
-      invoice.updated_at == date
+      invoice.created_at == date
     end
   end
 

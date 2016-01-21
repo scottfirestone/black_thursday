@@ -108,6 +108,7 @@ class SalesAnalystTest < Minitest::Test
   end
 
   def test_total_revenue_by_date
+    skip
     assert_equal 3018.40, sa.total_revenue_by_date(Time.parse("2011-05-09"))
   end
 
@@ -140,5 +141,7 @@ class SalesAnalystTest < Minitest::Test
     skip
     assert_equal 8, sa.revenue_by_merchant("12334123")
   end
+
+  
 
 end
